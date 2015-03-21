@@ -131,13 +131,15 @@ class TileLayer(BaseLayer):
                     except (KeyError, IndexError):
                         self.sprites[(px, py)] = None
                     else:
-                        self.sprites[(px, py)] = Sprite(texture,
+                        sprite = Sprite(texture,
                                                         x=(px*tw),
                                                         y=h-(py*th)-th,
                                                         batch=self.map.batch,
                                                         group=self.group,
                                                         usage="static",
                                                         )
+                        #sprite.scale = 2
+                        self.sprites[(px, py)] =  sprite
     old_group = None
     def set_opacity(self, opacity):
         for spr in self.sprites.keys():
@@ -251,7 +253,7 @@ class ObjectGroup(BaseLayer):
                                         group=self.group,
                                         usage="dynamic",
                                         )
-                    if obj["collison"] > 0:
+                    if "collison" in obj.keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
