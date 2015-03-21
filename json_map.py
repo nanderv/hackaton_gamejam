@@ -251,7 +251,7 @@ class ObjectGroup(BaseLayer):
         movement = 1
         jumpspeed = 30
         if "sprite" not in object.keys():
-            return
+            return [0,0]
         sprite = object["sprite"]
         vy = object["vy"]
         vx = object["vx"]
@@ -370,6 +370,11 @@ class ObjectGroup(BaseLayer):
             if b_add_x:
                 ret.append((oo_x+1, oo_y+1))
         return ret
+
+
+
+
+
 
 
 
