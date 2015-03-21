@@ -52,6 +52,7 @@ class Phase_Out (Effect):
             return False
         return True
 
+
 class Phase_In (Effect):
 
     def __init__(self, object, time):
@@ -69,13 +70,29 @@ class Phase_In (Effect):
             return False
         return True
 
+
 class Chain_Effect (Effect):
     effects = []
-    current_effect = 0
-    def __init__(self, effects, loop):
-        pass
+
+    def __init__(self, effects):
+        self.effects = effects
+
+    def run_effect(self):
+        if not(self.effects[0].run_effect()):
+            self.effects.remove(self.effects[0])
+
+
+class Simul_Effect(Effect):
+    effects = []
+
+    def __init__(self, effects):
+        self.effects = effects
+
     def run_effect(self):
         pass
+        for eff in self.effects:
+            if not(eff.run_effect()):
+                self.effects.remove(eff)
 
 class FadeLayerIn(Effect):
     layer = None
@@ -104,3 +121,4 @@ class FadeLayerOut(Effect):
             self.frame = 0
             return False
         return True
+

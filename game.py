@@ -1,7 +1,7 @@
 from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
 from special_effects import Phase_In, EffectManager
 from player import fancy_move_cam
-from hackaton_gamejam.Map_Modules.gamestate import GameState
+from Map_Modules.gamestate import GameState
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -77,4 +77,4 @@ def start_map(map):
     pyglet.clock.schedule_interval(update, FT)
     pyglet.clock.set_fps_limit(1/FT)
     pyglet.app.run()
-start_map("testmaplong.json")
+start_map("testmap1.json")
