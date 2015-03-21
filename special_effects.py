@@ -76,3 +76,31 @@ class Chain_Effect (Effect):
         pass
     def run_effect(self):
         pass
+
+class FadeLayerIn(Effect):
+    layer = None
+    def __init__(self, layer, time):
+        self.layer = layer
+        Effect.__init__(self,None, time)
+
+    def run_effect(self):
+        self.layer.set_opacity(255 * (self.frame/self.time))
+        self.frame += 1
+        if self.frame == self.time:
+            self.frame = 0
+            return False
+        return True
+
+class FadeLayerOut(Effect):
+    layer = None
+    def __init__(self, layer, time):
+        self.layer = layer
+        Effect.__init__(self,None, time)
+
+    def run_effect(self):
+        self.layer.set_opacity(255-255 * (self.frame/self.time))
+        self.frame += 1
+        if self.frame == self.time:
+            self.frame = 0
+            return False
+        return True

@@ -21,18 +21,26 @@ window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 gamestate = GameState.get_instance()
 gamestate.window = window
+
+
+
+
 @window.event
 def update(dt):
     gamestate = GameState.get_instance()
     gamestate.window.clear()
-
+    gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
     gamestate.map.draw()
+    gamestate.hippieness +=1
+    gamestate.be_hippy()
+    gamestate.hippieness = max(0, gamestate.hippieness)
 
 def start_map(map):
     # load the map
     gamestate = GameState.get_instance()
+    gamestate.layer_setup = {"slow": [300, 500, False]}
     fd = pyglet.resource.file(map, 'rt')
     gamestate.map = Map.load_json(fd)
     m = gamestate.map
@@ -62,6 +70,8 @@ def start_map(map):
         for object in m.objectgroups[key].objects:
             a = Phase_In(object, 1/FT)
             effect_manager.add_effect(a)
+
+    gamestate.hide_false_layers()
 
 
     pyglet.clock.schedule_interval(update, FT)

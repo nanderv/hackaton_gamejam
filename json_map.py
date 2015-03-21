@@ -97,6 +97,7 @@ class TileLayer(BaseLayer):
         - Get one tile of layer.
 
     """
+    opacity = 255
     def __iter__(self):
         return iter(self.data)
 
@@ -124,10 +125,11 @@ class TileLayer(BaseLayer):
 
         in_use = []
         if "properties" in self.data.keys():
-            print (self.data["properties"])
 
             if  "slow" in self.data["properties"].keys():
                 layer_batch = self.map.batch2
+            elif "veryslow" in self.data["properties"].keys():
+                layer_batch = self.map.batch3
             else:
                 layer_batch = self.map.batch
         else:
@@ -143,15 +145,19 @@ class TileLayer(BaseLayer):
                     except (KeyError, IndexError):
                         self.sprites[(px, py)] = None
                     else:
-                        self.sprites[(px, py)] = Sprite(texture,
+                        sprite = Sprite(texture,
                                                         x=(px*tw),
                                                         y=h-(py*th)-th,
                                                         batch=layer_batch,
                                                         group=self.group,
                                                         usage="static",
                                                         )
+                        sprite.opacity = self.opacity
+                        self.sprites[(px, py)] = sprite
+
     old_group = None
     def set_opacity(self, opacity):
+        self.opacity = opacity
         for spr in self.sprites.keys():
             sprite = self.sprites[spr]
             if sprite is not None:
@@ -282,8 +288,11 @@ class ObjectGroup(BaseLayer):
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object,  sprite):
-        movement = 1
-        jumpspeed = 8
+        movement = 3
+        jumpmovement = 1
+
+        jumpspeed = 12
+        glide = 0.5
 
 
         if "sprite" not in object.keys():
@@ -304,10 +313,10 @@ class ObjectGroup(BaseLayer):
                     jump = False
         if vy > 0:
             vy -= ay
-            d_y = -vy * movement
+            d_y = -vy * jumpmovement
         if vy <= 0:
             vy -= ay
-            d_y = -vy * movement
+            d_y = -int(vy * jumpmovement*glide)
         if vx < 0:
             d_x = -movement
         elif vx > 0:
@@ -393,13 +402,6 @@ class ObjectGroup(BaseLayer):
         else:
             return False
 
-
-
-
-
-
-
-
     def collision_detection(self, o_x, o_y, d_x, d_y,object):
         b_check =True
         if "collision" in self.map.tilelayers.keys():
@@ -443,6 +445,11 @@ class ObjectGroup(BaseLayer):
             if b_add_x:
                 ret.append((oo_x+1, oo_y+1))
         return ret
+
+    def set_opacity(self, opacity):
+        for object in self.objects:
+            if "sprite" in object.keys():
+                object["sprite"].opacity = opacity
 
 
 

@@ -41,8 +41,8 @@ class Player():
         self.object["vx"] = vx
 
 
-        mv = self.objectgroup.move(self.object, self.sprite)
-        fancy_move_cam(self.object, self.map, self.window, mv)
+        self.objectgroup.move(self.object, self.sprite)
+        fancy_move_cam(self.object, self.map, self.window)
 
 
 class AnimatedObject(pyglet.sprite.Sprite):
@@ -85,10 +85,8 @@ class GooseObject(AnimatedObject):
 
 
 
-def fancy_move_cam(object, map, window, mv):
+def fancy_move_cam(object, map, window):
 
-    d_x = mv[0]
-    d_y = mv[1]
 
     if "sprite" not in object.keys():
         return
