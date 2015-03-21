@@ -98,7 +98,7 @@
         }, 
         {
          "firstgid":49,
-         "image":"/fence\/tiles_fence_pole_right.png",
+         "image":"tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -113,7 +113,7 @@
         }, 
         {
          "firstgid":50,
-         "image":"/fence\/tiles_fence_pole_top_right.png",
+         "image":"tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -128,7 +128,7 @@
         }, 
         {
          "firstgid":51,
-         "image":"/fence\/tiles_fence_pole_top.png",
+         "image":"tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -143,7 +143,7 @@
         }, 
         {
          "firstgid":52,
-         "image":"/fence\/tiles_fence_pole.png",
+         "image":"tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -158,7 +158,7 @@
         }, 
         {
          "firstgid":53,
-         "image":"/fence\/tiles_fence_top.png",
+         "image":"tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -173,7 +173,7 @@
         }, 
         {
          "firstgid":54,
-         "image":"/fence\/tiles_fence.png",
+         "image":"/tiles_fence.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -188,7 +188,7 @@
         }, 
         {
          "firstgid":55,
-         "image":"/tiles\/grey_brick_floor_001.png",
+         "image":"..\/assets\/tiles\/grey_brick_floor_001.png",
          "imageheight":64,
          "imagewidth":176,
          "margin":0,
@@ -208,7 +208,7 @@
         }, 
         {
          "firstgid":99,
-         "image":"/tiles_bin_large.png",
+         "image":"tiles_objects.png",
          "imageheight":32,
          "imagewidth":32,
          "margin":0,
@@ -223,7 +223,7 @@
         }, 
         {
          "firstgid":103,
-         "image":"/tiles_bin.png",
+         "image":"tiles_objects.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -238,7 +238,7 @@
         }, 
         {
          "firstgid":104,
-         "image":"/tiles_trash_bag_black.png",
+         "image":"..\/tiles\/tiles_trash_bag_black.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -253,7 +253,7 @@
         }, 
         {
          "firstgid":105,
-         "image":"/tiles_trash_bag_yellow.png",
+         "image":"..\/tiles\/tiles_trash_bag_yellow.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
