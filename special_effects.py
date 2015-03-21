@@ -52,6 +52,7 @@ class Phase_Out (Effect):
             return False
         return True
 
+
 class Phase_In (Effect):
 
     def __init__(self, object, time):
@@ -69,10 +70,25 @@ class Phase_In (Effect):
             return False
         return True
 
+
 class Chain_Effect (Effect):
     effects = []
-    current_effect = 0
+
     def __init__(self, effects, loop):
         pass
+
     def run_effect(self):
-        pass
+        if not(self.effects[0].run_effect()):
+            self.effects.remove(self.effects[0])
+
+
+class Simul_Effect(Effect):
+    effects = []
+
+    def __init__(self, effects, loop):
+        this.effects = effects
+
+    def run_effect(self):
+        for eff in self.effects:
+            if not(eff.run_effect()):
+                self.effects.remove(eff)
