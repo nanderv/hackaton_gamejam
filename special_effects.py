@@ -89,6 +89,36 @@ class Simul_Effect(Effect):
         self.effects = effects
 
     def run_effect(self):
+        pass
         for eff in self.effects:
             if not(eff.run_effect()):
                 self.effects.remove(eff)
+
+class FadeLayerIn(Effect):
+    layer = None
+    def __init__(self, layer, time):
+        self.layer = layer
+        Effect.__init__(self,None, time)
+
+    def run_effect(self):
+        self.layer.set_opacity(255 * (self.frame/self.time))
+        self.frame += 1
+        if self.frame == self.time:
+            self.frame = 0
+            return False
+        return True
+
+class FadeLayerOut(Effect):
+    layer = None
+    def __init__(self, layer, time):
+        self.layer = layer
+        Effect.__init__(self,None, time)
+
+    def run_effect(self):
+        self.layer.set_opacity(255-255 * (self.frame/self.time))
+        self.frame += 1
+        if self.frame == self.time:
+            self.frame = 0
+            return False
+        return True
+

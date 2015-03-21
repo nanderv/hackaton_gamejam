@@ -1,7 +1,7 @@
 from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
 from special_effects import Phase_In, EffectManager
 from player import fancy_move_cam
-from hackaton_gamejam.Map_Modules.gamestate import GameState
+from Map_Modules.gamestate import GameState
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -21,18 +21,26 @@ window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 gamestate = GameState.get_instance()
 gamestate.window = window
+
+
+
+
 @window.event
 def update(dt):
     gamestate = GameState.get_instance()
     gamestate.window.clear()
-
+    gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
     gamestate.map.draw()
+    gamestate.hippieness +=1
+    gamestate.be_hippy()
+    gamestate.hippieness = max(0, gamestate.hippieness)
 
 def start_map(map):
     # load the map
     gamestate = GameState.get_instance()
+    gamestate.layer_setup = {"slow": [300, 500, False]}
     fd = pyglet.resource.file(map, 'rt')
     gamestate.map = Map.load_json(fd)
     m = gamestate.map
@@ -63,8 +71,10 @@ def start_map(map):
             a = Phase_In(object, 1/FT)
             effect_manager.add_effect(a)
 
+    gamestate.hide_false_layers()
+
 
     pyglet.clock.schedule_interval(update, FT)
     pyglet.clock.set_fps_limit(1/FT)
     pyglet.app.run()
-start_map("testmaplong.json")
+start_map("testmap1.json")
