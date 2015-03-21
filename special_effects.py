@@ -74,8 +74,8 @@ class Phase_In (Effect):
 class Chain_Effect (Effect):
     effects = []
 
-    def __init__(self, effects, loop):
-        pass
+    def __init__(self, effects):
+        self.effects = effects
 
     def run_effect(self):
         if not(self.effects[0].run_effect()):
@@ -85,8 +85,8 @@ class Chain_Effect (Effect):
 class Simul_Effect(Effect):
     effects = []
 
-    def __init__(self, effects, loop):
-        this.effects = effects
+    def __init__(self, effects):
+        self.effects = effects
 
     def run_effect(self):
         for eff in self.effects:
