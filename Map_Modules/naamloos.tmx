@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" nextobjectid="5">
+ <tileset firstgid="1" name="tiles_20" tilewidth="16" tileheight="16">
+  <image source="../tiles/tiles_20.png" width="48" height="256"/>
+ </tileset>
+ <layer name="tiles" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0EENAAAIA7FZwL9ZRPAZSZucgUsAAAAAAAAAAAAAAAAAAAAAAAAAAICvRlVx5z0AAAAAAAAAAAAAAAAAAAAA0GAB/UwHkw==
+  </data>
+ </layer>
+ <layer name="collision" width="100" height="100" opacity="0.5">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJADAIRFEzgvsv6wA2QUwReA9+e81FAAAAAAAAAAAAAAAAAAAAAAAAAAAAvzpq5VKTTe5s/AMAAAAAAAAAAAAAAAAAAAAA8FIB3NsDRg==
+  </data>
+ </layer>
+ <objectgroup name="obj1">
+  <object id="1" name="player" gid="33" x="798.667" y="852"/>
+  <object id="4" gid="33" x="838" y="814"/>
+ </objectgroup>
+</map>
