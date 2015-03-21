@@ -43,6 +43,7 @@ def update(dt):
     player.handle_input()
     effect_manager.run_effects()
 
+    object["rotation"] += 1
     window.clear()
     m.move_focus(1, 0)
     m.draw()

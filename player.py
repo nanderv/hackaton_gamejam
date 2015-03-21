@@ -11,14 +11,15 @@ class Player():
         self.objectgroup = objectgroup
 
     def handle_input(self):
-            d_x = 0
-            d_y = 0
-            if self.keyboardhandler[pyglet.window.key.D]:
-                d_x += 1
+        vx = 0
+        vy = 0
+        if self.keyboardhandler[pyglet.window.key.D]:
+            vx += 1
             if self.keyboardhandler[pyglet.window.key.A]:
-                d_x += -1
+                vx += -1
             if self.keyboardhandler[pyglet.window.key.S]:
-                d_y += -1
+                vy += 1
             if self.keyboardhandler[pyglet.window.key.W]:
-                d_y += 1
-            self.objectgroup.move(self.object, d_x, d_y)
+                vy += -1
+            object["vy"]=vy
+            object["vx"]=vx
