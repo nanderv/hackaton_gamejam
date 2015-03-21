@@ -236,8 +236,8 @@ class ObjectGroup(BaseLayer):
                     except (IndexError, KeyError):
                         sprite = None
                     else:
-                        if False: #str.lower(obj["name"]) == "player":
-                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        if str.lower(obj["name"]) == "player":
+                            sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
                         else:
                             object_dict = {"goose": GooseObject}
                             in_dict = False
@@ -265,7 +265,8 @@ class ObjectGroup(BaseLayer):
 
     def move(self, object):
         movement = 1
-        jumpspeed = 8
+        jumpspeed = 10
+        print(self.collision_group)
         if "sprite" not in object.keys():
             return [0,0]
         sprite = object["sprite"]
@@ -310,10 +311,10 @@ class ObjectGroup(BaseLayer):
             del self.sprites[(o_x, o_y)]
         for a in self.collision_group:
             if a is not object:
-            x1= [self.object["x"],self.object["y"]]
-            x2= [self.object["x"]+self.width,self.object["y"]]
-            x3= [self.object["x"],self.object["y"]-self.height]
-            x4= [self.object["x"]+self.width,self.object["y"]-self.height]
+                x1= [self.object["x"],self.object["y"]]
+                x2= [self.object["x"]+self.width,self.object["y"]]
+                x3= [self.object["x"],self.object["y"]-self.height]
+                x4= [self.object["x"]+self.width,self.object["y"]-self.height]
 
         return [d_x, d_y]
 

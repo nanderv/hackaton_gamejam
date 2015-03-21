@@ -39,7 +39,7 @@ class Player():
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
-
+        print (self.object["sprite"])
         mv = self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window, mv)
 
@@ -58,6 +58,7 @@ class AnimatedObject(pyglet.sprite.Sprite):
                                         batch=dbatch,
                                         group=dgroup,
                                         usage=dusage)
+        self.image = self.default
 
     def set_animation(self, name):
         self.image = self.animations.get(name, self.default)
@@ -66,7 +67,7 @@ class AnimatedObject(pyglet.sprite.Sprite):
     def add_animation(self, name, default, length):
         raw = pyglet.resource.image(default)
         raw_seq = pyglet.image.ImageGrid(raw, 1, length)
-        animation = pyglet.image.Animation.from_image_sequence(raw_seq, 1/6)
+        animation = pyglet.image.Animation.from_image_sequence(raw_seq, 1/12)
 
         self.animations[name] = animation
 
