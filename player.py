@@ -17,7 +17,7 @@ class Player():
         self.objectgroup = objectgroup
         self.map = map
         self.window = window
-
+        self.sprite = self.object["sprite"]
 
     def handle_input(self):
         vx = self.object["vx"]
@@ -40,7 +40,8 @@ class Player():
         self.object["vy"] = vy
         self.object["vx"] = vx
 
-        mv = self.objectgroup.move(self.object)
+
+        mv = self.objectgroup.move(self.object, self.sprite)
         fancy_move_cam(self.object, self.map, self.window, mv)
 
 
