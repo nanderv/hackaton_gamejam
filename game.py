@@ -1,12 +1,14 @@
 __author__ = 'nander'
 #/usr/bin/env python
 
-import pyglet
 import os
+
+import pyglet
+
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
-from special_effects import *
+from hackaton_gamejam.special_effects import *
 
 window = pyglet.window.Window(fullscreen=False)
 window.set_vsync(0)
