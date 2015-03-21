@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 from hackaton_gamejam.player import fancy_move_cam
 from hackaton_gamejam.special_effects import Phase_In, EffectManager
+=======
+#from hackaton_gamejam.player import fancy_move_cam
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -15,9 +18,10 @@ from special_effects import *
 
 pyglet.resource.path = ['tiles', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
 window = pyglet.window.Window(fullscreen=True, width = 800, height = 600)
+
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("alley1.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -42,10 +46,10 @@ for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
-if player is None:
-    print("err")
+        else:
+            print("err")
 
-m.set_focus(player.object["x"]+window.width/2,player.object["x"]+window.height/2 )
+
 for key in og_keys:
     for object in m.objectgroups[key].objects:
         a = Phase_In(object, 60)
@@ -59,8 +63,10 @@ def update(dt):
 
     object["rotation"] += 1
     window.clear()
+    m.move_focus(1, 0)
     m.draw()
 
+print(m.tilelayers["collision"][10, 10])
 pyglet.clock.schedule_interval(update, 1.0/60.0)
 pyglet.clock.set_fps_limit(60)
 pyglet.app.run()
