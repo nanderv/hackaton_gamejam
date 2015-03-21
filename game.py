@@ -19,7 +19,7 @@ pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '',
 window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("testmap1.json", 'rt')
+fd = pyglet.resource.file("testmaplong.json", 'rt')
 m = Map.load_json(fd)
 
 
