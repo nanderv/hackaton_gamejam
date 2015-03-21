@@ -11,7 +11,8 @@ os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
 from special_effects import *
-pyglet.resource.path = ['tiles', '','Map_Modules']
+
+pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence']
 window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
@@ -40,6 +41,8 @@ for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
             player =Player(object, m.objectgroups[key], keyboardhandler, m)
+        else:
+            print("err")
 
 
 for key in og_keys:

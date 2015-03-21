@@ -33,14 +33,16 @@ class Player():
         self.object["vy"] = vy
         self.object["vx"] = vx
         mv = self.objectgroup.move(self.object)
+        fancy_move_cam(self, self.map, self.window, mv)
 
 
-def fancy_move_cam(Player, map, window, mv):
+
+def fancy_move_cam(player, map, window, mv):
     x = camera_slide_window["x"]*window.width
     d_x = mv[0]
     d_y = mv[1]
     y = camera_slide_window["y"]*window.height
     maxx = camera_slide_window["xmax"]*window.width
     maxy = camera_slide_window["ymax"]*window.height
-    if maxx > Player.object["sprite"].x > x and maxy > Player.object["sprite"].y > y:
+    if maxx > player.object["sprite"].x > x and maxy > player.object["sprite"].y > y:
         map.move_focus(-d_x, -d_y)

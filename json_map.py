@@ -245,11 +245,13 @@ class ObjectGroup(BaseLayer):
                     obj["ax"]=0
                     obj["ay"]=-1
                     obj["jump"]= False
+                    obj["jumpmove"] = 0
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
         movement = 1
         jumpmovement = 3
+        jumpmove = object["jumpmove"]
         if "sprite" not in object.keys():
             return
         sprite = object["sprite"]
@@ -258,38 +260,80 @@ class ObjectGroup(BaseLayer):
         d_y = 0
         d_x = 0
         jump = object["jump"]
-
         o_x = object["x"]
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
         b_check = True
 
-        for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
-            if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
-                if jump:
-                    if ay!= 0:
-                        vy = jumpmovement
-                    else:
-                        vx = jumpmovement
-        if vy !=0:
+        if ax != 0:
+            if ax > 0:
+                #<---
+                for a in self.to_tile_coordinates(o_x+1, o_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_x = movement
+                    jumpmove -= 1
+                else:
+                    d_x = -movement
+            else:
+                #--->
+                for a in self.to_tile_coordinates(o_x-1, o_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = True
+                        else:
+                            jumpmove = 0
+                            jump = False
+                if jumpmove > 0:
+                    d_x = -movement
+                    jumpmove -= 1
+                else:
+                    d_x = movement;
             if vy > 0:
-                d_y = movement - ay
-                vy -= movement
-                object["vy"] = vy-movement
+                d_y = movement
+            elif vy < 0:
+                d_y = -movement
+        elif ay != 0:
+            if ay >0:
+                #beneden
+                for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_y = -movement
+                    jumpmove -= 1
+                else:
+                    d_y = movement
             else:
-                d_y = -movement - ay
-                vy += movement
-                object["vy"] = vy+ movement
-        if vx !=0:
+                #^^^^
+                for a in self.to_tile_coordinates(o_x, o_y-1, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_y = movement
+                    jumpmove -= 1
+                else:
+                    d_y = -movement
             if vx > 0:
-                d_x = movement - ax
-                vx -= movement
-                object["vx"] = vy-movement
-            else:
-                d_x = -movement - ax
-                vx -= movement
-                object["vx"] = vy+ movement
+                d_x = movement
+            elif vx < 0:
+                d_x = -movement
+
 
 
         if "collision" in self.map.tilelayers.keys():
@@ -303,7 +347,6 @@ class ObjectGroup(BaseLayer):
                         x_check = False
                 if x_check:
                     d_y = 0
-
                 else:
                     y_check = True
                     for a in self.to_tile_coordinates(o_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
@@ -312,7 +355,7 @@ class ObjectGroup(BaseLayer):
                     if y_check:
                         d_x = 0
                     else:
-                        return
+                        return [0,0]
 
 
         sprite.x += d_x
@@ -324,6 +367,28 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        return [d_x, d_y]
+
+    def to_tile_coordinates(self, o_x, o_y, width, height):
+        ret = []
+        oo_x = math.floor(o_x/width)
+
+        oo_y = math.floor((o_y-height)/height)
+        ret.append((oo_x, oo_y))
+        b_add_x = False
+        if math.floor(o_x/width)*width != o_x:
+            b_add_x = True
+            ret.append((oo_x+1, oo_y))
+
+        if math.floor(o_y/height)*height != o_y:
+            ret.append((oo_x, oo_y+1))
+            if b_add_x:
+                ret.append((oo_x+1, oo_y+1))
+        return ret
+
+
+
+
 
     def to_tile_coordinates(self, o_x, o_y, width, height):
         ret = []
@@ -468,7 +533,7 @@ class Map(object):
             if layer.data["visible"]:
                 layer.set_viewport(self.x, self.y, self.w, self.h)
     def move_focus(self,dx,dy):
-        self.set_focus(sdelf.x+dx, self.y+dy)
+        self.set_focus(self.x+dx, self.y+dy)
 
     def set_focus(self, x, y):
         """Sets the focus in (x, y) world coordinates."""
