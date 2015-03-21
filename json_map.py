@@ -113,7 +113,6 @@ class TileLayer(BaseLayer):
     def set_viewport(self, x, y, w, h):
         tw = self.map.data["tilewidth"]
         th = self.map.data["tileheight"]
-
         def yrange(f, t, s):
             while f < t:
                 yield f
@@ -138,6 +137,14 @@ class TileLayer(BaseLayer):
                                                         group=self.group,
                                                         usage="static",
                                                         )
+    old_group = None
+    def set_opacity(self, opacity):
+        for spr in self.sprites.keys():
+            sprite = self.sprites[spr]
+            if sprite is not None:
+                    sprite.opacity = opacity
+
+
 
 
 class ObjectGroup(BaseLayer):
@@ -236,13 +243,15 @@ class ObjectGroup(BaseLayer):
                     obj["vx"]=0
                     obj["vy"]=0
                     obj["ax"]=0
-                    obj["ay"]=-1
+                    obj["ay"]=1
                     obj["jump"]= False
+                    obj["jumpmove"] = 0
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
-        movement = 1
+        movement = 3
         jumpmovement = 3
+        jumpmove = object["jumpmove"]
         if "sprite" not in object.keys():
             return
         sprite = object["sprite"]
@@ -251,44 +260,86 @@ class ObjectGroup(BaseLayer):
         d_y = 0
         d_x = 0
         jump = object["jump"]
-
         o_x = object["x"]
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
         b_check = True
 
-        for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
-            if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
-                if jump:
-                    if ay!= 0:
-                        vy = jumpmovement
-                    else:
-                        vx = jumpmovement
-        if vy !=0:
+        if ax != 0:
+            if ax > 0:
+                #<---
+                for a in self.to_tile_coordinates(o_x+1, o_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_x = movement
+                    jumpmove -= 1
+                else:
+                    d_x = -movement
+            else:
+                #--->
+                for a in self.to_tile_coordinates(o_x-1, o_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = True
+                        else:
+                            jumpmove = 0
+                            jump = False
+                if jumpmove > 0:
+                    d_x = -movement
+                    jumpmove -= 1
+                else:
+                    d_x = movement;
             if vy > 0:
-                d_y = movement - ay
-                vy -= movement
-                object["vy"] = vy-movement
+                d_y = movement
+            elif vy < 0:
+                d_y = -movement
+        elif ay != 0:
+            if ay >0:
+                #beneden
+                for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_y = -movement
+                    jumpmove -= 1
+                else:
+                    d_y = movement
             else:
-                d_y = -movement - ay
-                vy += movement
-                object["vy"] = vy+ movement
-        if vx !=0:
+                #^^^^
+                for a in self.to_tile_coordinates(o_x, o_y-1, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if jump:
+                            jumpmove = jumpmovement
+                            jump = False
+                        else:
+                            jumpmove = 0
+                if jumpmove > 0:
+                    d_y = movement
+                    jumpmove -= 1
+                else:
+                    d_y = -movement
             if vx > 0:
-                d_x = movement - ax
-                vx -= movement
-                object["vx"] = vy-movement
-            else:
-                d_x = -movement - ax
-                vx -= movement
-                object["vx"] = vy+ movement
+                d_x = movement
+            elif vx < 0:
+                d_x = -movement
 
 
-        if "collision" in self.map.tilelayers.keys():
-            for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
-                if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
-                    b_check = False
+
+            if "collision" in self.map.tilelayers.keys():
+                for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        b_check = False
             if not b_check:
                 x_check = True
                 for a in self.to_tile_coordinates(o_x+d_x, o_y, object["sprite"].width, object["sprite"].height):
@@ -296,7 +347,6 @@ class ObjectGroup(BaseLayer):
                         x_check = False
                 if x_check:
                     d_y = 0
-
                 else:
                     y_check = True
                     for a in self.to_tile_coordinates(o_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
@@ -305,11 +355,11 @@ class ObjectGroup(BaseLayer):
                     if y_check:
                         d_x = 0
                     else:
-                        return
+                        return [0,0]
 
 
         sprite.x += d_x
-        sprite.y += d_y
+        sprite.y -= d_y
         object["x"] += d_x
         object["y"] += d_y
         object["vy"] = vy
@@ -317,6 +367,7 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        return [d_x, d_y]
 
     def to_tile_coordinates(self, o_x, o_y, width, height):
         ret = []
@@ -333,7 +384,11 @@ class ObjectGroup(BaseLayer):
             ret.append((oo_x, oo_y+1))
             if b_add_x:
                 ret.append((oo_x+1, oo_y+1))
+
         return ret
+
+
+
 
 
 

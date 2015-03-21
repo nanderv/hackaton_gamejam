@@ -1,17 +1,22 @@
+from hackaton_gamejam.player import fancy_move_cam
+
 __author__ = 'nander'
 #/usr/bin/env python
 
-import pyglet
 import os
+
+import pyglet
+
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
 from special_effects import *
 
-window = pyglet.window.Window(fullscreen=False)
+pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence']
+window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("alley1.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -27,10 +32,17 @@ window.push_handlers(keyboardhandler)
 og_keys = m.objectgroups.keys()
 effect_manager  = EffectManager()
 player = None
+testlayer = None
+tl_keys = m.tilelayers.keys()
+if "testlayer" in tl_keys:
+    testlayer = m.tilelayers["testlayer"]
+
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
-            player =Player(object, m.objectgroups[key], keyboardhandler)
+            player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
+        else:
+            print("err")
 
 
 for key in og_keys:
@@ -41,6 +53,8 @@ for key in og_keys:
 def update(dt):
     player.handle_input()
     effect_manager.run_effects()
+    if testlayer is not None:
+        testlayer.set_opacity(128)
 
     object["rotation"] += 1
     window.clear()
@@ -48,6 +62,6 @@ def update(dt):
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])
-pyglet.clock.schedule_interval(update, 1.0/30.0)
-pyglet.clock.set_fps_limit(30)
+pyglet.clock.schedule_interval(update, 1.0/60.0)
+pyglet.clock.set_fps_limit(60)
 pyglet.app.run()
