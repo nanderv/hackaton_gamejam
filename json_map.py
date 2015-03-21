@@ -37,7 +37,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
-from hackaton_gamejam.player import PlayerAnimatedObject, GooseObject
+from player import PlayerAnimatedObject, GooseObject
 
 __all__ = ['Map', "TileLayer", "ObjectGroup",]
 
@@ -251,7 +251,7 @@ class ObjectGroup(BaseLayer):
                                         group=self.group,
                                         usage="dynamic",
                                         )
-                    if obj["collison"] > 0:
+                    if "collision" in obj.keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
@@ -285,9 +285,9 @@ class ObjectGroup(BaseLayer):
             print(vy)
             vy -= ay
             d_y = -vy * movement
-        if vy == 0:
-            vy += ay
-            d_y = vy * movement
+        if vy <= 0:
+            vy -= ay
+            d_y = -vy * movement
         if vx < 0:
             d_x = -movement
         elif vx > 0:
@@ -306,6 +306,13 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        for a in self.collision_group:
+            if a is not object:
+            x1= [self.object["x"],self.object["y"]]
+            x2= [self.object["x"]+self.width,self.object["y"]]
+            x3= [self.object["x"],self.object["y"]-self.height]
+            x4= [self.object["x"]+self.width,self.object["y"]-self.height]
+
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
