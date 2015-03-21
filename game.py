@@ -7,7 +7,7 @@ os.sys.path.insert(0, '.')
 
 from json_map import Map
 
-window = pyglet.window.Window(fullscreen=True)
+window = pyglet.window.Window(fullscreen=False)
 window.set_vsync(0)
 # load the map
 fd = pyglet.resource.file("test.json", 'rt')
@@ -28,17 +28,19 @@ def update(dt):
     og_keys = m.objectgroups.keys()
     for key in og_keys:
         for object in m.objectgroups[key].objects:
-            d_x = 0
-            d_y = 0
+            vx = 0
+            vy = 0
             if keyboardhandler[pyglet.window.key.D]:
-                d_x += 1
+                vx += 1
             if keyboardhandler[pyglet.window.key.A]:
-                d_x += -1
+                vx += -1
             if keyboardhandler[pyglet.window.key.S]:
-                d_y += 1
+                vy += 1
             if keyboardhandler[pyglet.window.key.W]:
-                d_y += -1
-            m.objectgroups[key].move(object, d_x, d_y)
+                vy += -1
+            object["vy"]=vy
+            object["vx"]=vx
+            m.objectgroups[key].move(object)
             object["rotation"] += 1
     window.clear()
     m.invalidate()
