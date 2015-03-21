@@ -20,9 +20,9 @@ class Player():
 
 
     def handle_input(self):
-        vx = 0
+        vx = self.object["vx"]
 
-        vy = 0
+        vy = self.object["vy"]
 
         jump = False
         if self.keyboardhandler[pyglet.window.key.D]:
