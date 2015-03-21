@@ -25,13 +25,17 @@ class Player():
         vy = self.object["vy"]
 
         jump = False
-        if self.keyboardhandler[pyglet.window.key.D] and self.object["ax"]==0:
+        if (self.keyboardhandler[pyglet.window.key.D] or
+                self.keyboardhandler[pyglet.window.key.RIGHT]) and self.object["ax"] == 0:
             vx += 1
-        if self.keyboardhandler[pyglet.window.key.A] and self.object["ax"]==0:
+        if (self.keyboardhandler[pyglet.window.key.A] or
+                self.keyboardhandler[pyglet.window.key.LEFT]) and self.object["ax"] == 0:
             vx -= 1
-        if self.keyboardhandler[pyglet.window.key.S] and self.object["ay"]==0:
+        if (self.keyboardhandler[pyglet.window.key.S] or
+                self.keyboardhandler[pyglet.window.key.DOWN]) and self.object["ay"] == 0:
             vy -= 1
-        if self.keyboardhandler[pyglet.window.key.W] and self.object["ay"]==0:
+        if (self.keyboardhandler[pyglet.window.key.W] or
+                self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
             vy += 1
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
@@ -71,6 +75,9 @@ class AnimatedObject(pyglet.sprite.Sprite):
 
         self.animations[name] = animation
 
+    def onTick(self):
+        pass
+
 class PlayerAnimatedObject(AnimatedObject):
 
     def __init__(self,x,y,batch,group,usage):
@@ -84,6 +91,17 @@ class GooseObject(AnimatedObject):
         AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
 
 
+class BulletObject(AnimatedObject):
+
+    def __init__(self, x, y, batch, group, usage, vx, vy):
+        super().__init__(self, "assets/entity/sprite_pink_elephant.png", x, y, batch, group, usage, 10)
+        self.vx = vx
+        self.vy = vy
+
+    def onTick(self):
+        super().onTick()
+        self.x += self.vx
+        self.y += self.vy
 
 def fancy_move_cam(object, map, window, mv):
 
