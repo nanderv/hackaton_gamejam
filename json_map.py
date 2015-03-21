@@ -243,13 +243,13 @@ class ObjectGroup(BaseLayer):
                     obj["vx"]=0
                     obj["vy"]=0
                     obj["ax"]=0
-                    obj["ay"]=-1
+                    obj["ay"]=1
                     obj["jump"]= False
                     obj["jumpmove"] = 0
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
-        movement = 1
+        movement = 3
         jumpmovement = 3
         jumpmove = object["jumpmove"]
         if "sprite" not in object.keys():
@@ -336,10 +336,10 @@ class ObjectGroup(BaseLayer):
 
 
 
-        if "collision" in self.map.tilelayers.keys():
-            for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
-                if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
-                    b_check = False
+            if "collision" in self.map.tilelayers.keys():
+                for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
+                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        b_check = False
             if not b_check:
                 x_check = True
                 for a in self.to_tile_coordinates(o_x+d_x, o_y, object["sprite"].width, object["sprite"].height):
@@ -359,7 +359,7 @@ class ObjectGroup(BaseLayer):
 
 
         sprite.x += d_x
-        sprite.y += d_y
+        sprite.y -= d_y
         object["x"] += d_x
         object["y"] += d_y
         object["vy"] = vy
@@ -384,28 +384,11 @@ class ObjectGroup(BaseLayer):
             ret.append((oo_x, oo_y+1))
             if b_add_x:
                 ret.append((oo_x+1, oo_y+1))
+
         return ret
 
 
 
-
-
-    def to_tile_coordinates(self, o_x, o_y, width, height):
-        ret = []
-        oo_x = math.floor(o_x/width)
-
-        oo_y = math.floor((o_y-height)/height)
-        ret.append((oo_x, oo_y))
-        b_add_x = False
-        if math.floor(o_x/width)*width != o_x:
-            b_add_x = True
-            ret.append((oo_x+1, oo_y))
-
-        if math.floor(o_y/height)*height != o_y:
-            ret.append((oo_x, oo_y+1))
-            if b_add_x:
-                ret.append((oo_x+1, oo_y+1))
-        return ret
 
 
 

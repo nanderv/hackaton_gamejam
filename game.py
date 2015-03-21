@@ -1,3 +1,5 @@
+from hackaton_gamejam.player import fancy_move_cam
+
 __author__ = 'nander'
 #/usr/bin/env python
 
@@ -10,11 +12,11 @@ from player import Player
 from json_map import Map
 from special_effects import *
 
-window = pyglet.window.Window(fullscreen=False)
+pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence']
+window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-pyglet.resource.path = [ 'tiles','']
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("alley1.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -38,7 +40,9 @@ if "testlayer" in tl_keys:
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
-            player =Player(object, m.objectgroups[key], keyboardhandler)
+            player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
+        else:
+            print("err")
 
 
 for key in og_keys:
@@ -51,6 +55,7 @@ def update(dt):
     effect_manager.run_effects()
     if testlayer is not None:
         testlayer.set_opacity(128)
+
     object["rotation"] += 1
     window.clear()
     m.move_focus(1, 0)
