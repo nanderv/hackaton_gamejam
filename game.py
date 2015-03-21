@@ -27,6 +27,11 @@ window.push_handlers(keyboardhandler)
 og_keys = m.objectgroups.keys()
 effect_manager  = EffectManager()
 player = None
+testlayer = None
+tl_keys = m.tilelayers.keys()
+if "testlayer" in tl_keys:
+    testlayer = m.tilelayers["testlayer"]
+
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
@@ -41,13 +46,14 @@ for key in og_keys:
 def update(dt):
     player.handle_input()
     effect_manager.run_effects()
-
+    if testlayer is not None:
+        testlayer.set_opacity(128)
     object["rotation"] += 1
     window.clear()
     m.move_focus(1, 0)
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])
-pyglet.clock.schedule_interval(update, 1.0/30.0)
-pyglet.clock.set_fps_limit(30)
+pyglet.clock.schedule_interval(update, 1.0/60.0)
+pyglet.clock.set_fps_limit(60)
 pyglet.app.run()

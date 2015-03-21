@@ -113,7 +113,6 @@ class TileLayer(BaseLayer):
     def set_viewport(self, x, y, w, h):
         tw = self.map.data["tilewidth"]
         th = self.map.data["tileheight"]
-
         def yrange(f, t, s):
             while f < t:
                 yield f
@@ -138,6 +137,14 @@ class TileLayer(BaseLayer):
                                                         group=self.group,
                                                         usage="static",
                                                         )
+    old_group = None
+    def set_opacity(self, opacity):
+        for spr in self.sprites.keys():
+            sprite = self.sprites[spr]
+            if sprite is not None:
+                    sprite.opacity = opacity
+
+
 
 
 class ObjectGroup(BaseLayer):
