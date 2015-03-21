@@ -1,6 +1,5 @@
 from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
 from special_effects import Phase_In, EffectManager
-import math
 from player import fancy_move_cam
 
 __author__ = 'nander'
@@ -17,12 +16,7 @@ from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
 
-window = pyglet.window.Window(fullscreen=True)
-wwidth = int(math.floor(window.width/3))
-hheight = int(math.floor(window.height/3))
-
-window.close()
-window = pyglet.window.Window(fullscreen=True, width=wwidth, height=hheight)
+window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
 fd = pyglet.resource.file("testmap1.json", 'rt')
@@ -49,15 +43,13 @@ if "testlayer" in tl_keys:
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if str.lower(object["name"]) == "player":
-            print(object)
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
 
-if player is None:
-    print ("error: No Player found. Please add an object named player. This will be the player entrypoint")
-    exit()
+
+
 for key in og_keys:
     for object in m.objectgroups[key].objects:
-        a = Phase_In(object, 600)
+        a = Phase_In(object, 1/FT)
         effect_manager.add_effect(a)
 @window.event
 def update(dt):

@@ -130,16 +130,14 @@ class TileLayer(BaseLayer):
                         texture = self.map.get_texture(self[px, py])
                     except (KeyError, IndexError):
                         self.sprites[(px, py)] = None
-                else:
-                        sprite = Sprite(texture,
+                    else:
+                        self.sprites[(px, py)] = Sprite(texture,
                                                         x=(px*tw),
                                                         y=h-(py*th)-th,
                                                         batch=self.map.batch,
                                                         group=self.group,
                                                         usage="static",
                                                         )
-                        #sprite.scale = 2
-                        self.sprites[(px, py)] =  sprite
     old_group = None
     def set_opacity(self, opacity):
         for spr in self.sprites.keys():
@@ -235,38 +233,39 @@ class ObjectGroup(BaseLayer):
                         tileoffset = self.map.get_tileoffset(obj["gid"])
                     except (IndexError, KeyError):
                         sprite = None
-                else:
-                    if False:#str.lower(obj["name"]) == "player":
-                        sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
                     else:
-                        object_dict = {"goose": GooseObject}
-                        in_dict = False
-                        for object in object_dict.keys():
-                            if object == obj["type"]:
-                                object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
-                                in_dict = True
-                        if not in_dict:
-                            sprite = Sprite(texture,
-                                    x=obj["x"]+tileoffset[0],
-                                    y=self.h-obj["y"]+tileoffset[1],
-                                    batch=self.map.batch,
-                                    group=self.group,
-                                    usage="dynamic",
-                                    )
-                    if "collison" in obj.keys():
+                        if False:#str.lower(obj["name"]) == "player":
+                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        else:
+                            object_dict = {"goose": GooseObject}
+                            in_dict = False
+                            for object in object_dict.keys():
+                                if object == obj["type"]:
+                                    object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                                    in_dict = True
+                            if not in_dict:
+                                sprite = Sprite(texture,
+                                        x=obj["x"]+tileoffset[0],
+                                        y=self.h-obj["y"]+tileoffset[1],
+                                        batch=self.map.batch,
+                                        group=self.group,
+                                        usage="dynamic",
+                                        )
+                    if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
-                    obj["vx"] = 0
-                    obj["vy"] = 0
-                    obj["ax"] = 0
-                    obj["ay"] = 1
-                    obj["jump"] = False
+                    obj["vx"]=0
+                    obj["vy"]=0
+                    obj["ax"]=0
+
+                    obj["ay"]=1
+                    obj["jump"]= False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
         movement = 1
-        jumpspeed = 10
-        print(self.collision_group)
+        jumpspeed = 8
+
         if "sprite" not in object.keys():
             return [0,0]
         sprite = object["sprite"]
@@ -312,10 +311,10 @@ class ObjectGroup(BaseLayer):
             print("sdf")
             if a is not self:
                 print("hier")
-                x1 = [self.object["x"],self.object["y"]]
-                x2 = [self.object["x"]+self.width,self.object["y"]]
-                x3 = [self.object["x"],self.object["y"]-self.height]
-                x4 = [self.object["x"]+self.width,self.object["y"]-self.height]
+                x1 = [object["x"],object["y"]]
+                x2 = [object["x"]+self.width,object["y"]]
+                x3 = [object["x"],object["y"]-self.height]
+                x4 = [object["x"]+self.width,object["y"]-self.height]
                 y1 = [a.object["x"],a.object["y"]]
                 y2 = [a.object["x"]+a.width,a.object["y"]]
                 y3 = [a.object["x"],a.object["y"]-a.height]
