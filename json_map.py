@@ -31,7 +31,10 @@ any path information must be removed from the tileset.
 import math
 import os
 import json
-
+batch_2_mpx = 0.5
+batch_2_mpy = 0.5
+batch_3_mpx = 0.3
+batch_3_mpy = 0.3
 import pyglet
 from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
@@ -120,6 +123,15 @@ class TileLayer(BaseLayer):
                 f += s
 
         in_use = []
+        if "properties" in self.data.keys():
+            print (self.data["properties"])
+
+            if  "slow" in self.data["properties"].keys():
+                layer_batch = self.map.batch2
+            else:
+                layer_batch = self.map.batch
+        else:
+            layer_batch = self.map.batch
         for j in yrange(y, y+h+th, th):
             py = j//th
             for i in yrange(x, x+w+tw, tw):
@@ -134,7 +146,7 @@ class TileLayer(BaseLayer):
                         self.sprites[(px, py)] = Sprite(texture,
                                                         x=(px*tw),
                                                         y=h-(py*th)-th,
-                                                        batch=self.map.batch,
+                                                        batch=layer_batch,
                                                         group=self.group,
                                                         usage="static",
                                                         )
@@ -144,6 +156,8 @@ class TileLayer(BaseLayer):
             sprite = self.sprites[spr]
             if sprite is not None:
                     sprite.opacity = opacity
+
+
 
 
 
@@ -270,7 +284,7 @@ class ObjectGroup(BaseLayer):
     def move(self, object,  sprite):
         movement = 1
         jumpspeed = 8
-        print ( len(self.objects))
+
 
         if "sprite" not in object.keys():
             return [0,0]
@@ -315,7 +329,7 @@ class ObjectGroup(BaseLayer):
         return [d_x, d_y]
 
         for a in self.collision_group:
-            print("sdf")
+
             if a is not self:
                 print("hier")
                 x1 = [object["x"],object["y"]]
@@ -509,6 +523,8 @@ class Map(object):
                 raise ValueError("unsupported layer type %s, skipping" % layer["type"])
 
         self.batch = pyglet.graphics.Batch()
+        self.batch2 = pyglet.graphics.Batch()
+        self.batch3 = pyglet.graphics.Batch()
 
         # viewport
         self.x = 0
@@ -645,6 +661,14 @@ class Map(object):
 
     def draw(self):
         """Applies transforms and draws the batch."""
+        gl.glPushMatrix()
+        gl.glTranslatef(-math.floor(self.x*batch_3_mpx), math.floor(self.y*batch_3_mpy), 0)
+        self.batch3.draw()
+        gl.glPopMatrix()
+        gl.glPushMatrix()
+        gl.glTranslatef(-math.floor(self.x*batch_2_mpx), math.floor(self.y*batch_2_mpy), 0)
+        self.batch2.draw()
+        gl.glPopMatrix()
         gl.glPushMatrix()
         gl.glTranslatef(-self.x, self.y, 0)
         self.batch.draw()
