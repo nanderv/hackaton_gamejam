@@ -215,8 +215,13 @@ class ObjectGroup(BaseLayer):
 
     def get_by_type(self, otype):
         return self._index_type[otype]
-
+    first = False
     def set_viewport(self, x, y, w, h):
+        if self.first == False:
+            self.first = True
+        else:
+            return
+
         self.h = h
         tw = self.map.data["tilewidth"]
         th = self.map.data["tileheight"]
@@ -234,8 +239,8 @@ class ObjectGroup(BaseLayer):
                     except (IndexError, KeyError):
                         sprite = None
                     else:
-                        if False: #str.lower(obj["name"]) == "player":
-                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        if str.lower(obj["name"]) == "player":
+                            sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
                         else:
                             object_dict = {"goose": GooseObject}
                             in_dict = False
@@ -251,22 +256,24 @@ class ObjectGroup(BaseLayer):
                                         group=self.group,
                                         usage="dynamic",
                                         )
-                    if "collision" in obj.keys():
+                    if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
                     obj["ax"]=0
+
                     obj["ay"]=1
                     obj["jump"]= False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
-    def move(self, object):
+    def move(self, object,  sprite):
         movement = 1
         jumpspeed = 8
+        print ( len(self.objects))
+
         if "sprite" not in object.keys():
             return [0,0]
-        sprite = object["sprite"]
         vy = object["vy"]
         vx = object["vx"]
         d_y = 0
@@ -276,7 +283,7 @@ class ObjectGroup(BaseLayer):
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
-        for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
+        for a in self.to_tile_coordinates(o_x, o_y+1, sprite.width, sprite.height):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
                     vy = jumpspeed
@@ -305,14 +312,16 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        return [d_x, d_y]
+
         for a in self.collision_group:
             print("sdf")
             if a is not self:
                 print("hier")
-                x1 = [self.object["x"],self.object["y"]]
-                x2 = [self.object["x"]+self.width,self.object["y"]]
-                x3 = [self.object["x"],self.object["y"]-self.height]
-                x4 = [self.object["x"]+self.width,self.object["y"]-self.height]
+                x1 = [object["x"],object["y"]]
+                x2 = [object["x"]+self.width,object["y"]]
+                x3 = [object["x"],object["y"]-self.height]
+                x4 = [object["x"]+self.width,object["y"]-self.height]
                 y1 = [a.object["x"],a.object["y"]]
                 y2 = [a.object["x"]+a.width,a.object["y"]]
                 y3 = [a.object["x"],a.object["y"]-a.height]
@@ -323,7 +332,6 @@ class ObjectGroup(BaseLayer):
                     or self.lineintersect(x1,x4,y1,y2) or self.lineintersect(x1,x4,y3,y2) or self.lineintersect(x1,x4,y4,y3) or self.lineintersect(x1,x4,y1,y4):
                     print("hoi")
 
-        return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
         iy = 0

@@ -19,7 +19,7 @@ pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '',
 window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("testmap1.json", 'rt')
+fd = pyglet.resource.file("testmaplong.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -44,8 +44,7 @@ for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if str.lower(object["name"]) == "player":
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
-        else:
-            print("err")
+
 
 
 for key in og_keys:
