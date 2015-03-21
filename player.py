@@ -15,17 +15,17 @@ class Player():
         self.window = window
 
     def handle_input(self):
-        vx = 0
-        vy = 0
+        vx = self.object["vx"]
+        vy = self.object["vy"]
         jump = False
         if self.keyboardhandler[pyglet.window.key.D]:
-            vx = 1
+            vx += 1
         if self.keyboardhandler[pyglet.window.key.A]:
-            vx = -1
+            vx -= 1
         if self.keyboardhandler[pyglet.window.key.S]:
-            vy = -1
+            vy -= 1
         if self.keyboardhandler[pyglet.window.key.W]:
-            vy = 1
+            vy += 1
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
 
