@@ -40,7 +40,7 @@ if "testlayer" in tl_keys:
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if object["name"] == "player":
-            player =Player(object, m.objectgroups[key], keyboardhandler, m)
+            player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
         else:
             print("err")
 
@@ -55,7 +55,6 @@ def update(dt):
     effect_manager.run_effects()
     if testlayer is not None:
         testlayer.set_opacity(128)
-    fancy_move_cam(player, m, window)
 
     object["rotation"] += 1
     window.clear()
