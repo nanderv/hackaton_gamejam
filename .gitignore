@@ -54,4 +54,4 @@ docs/_build/
 target/
 
 # JetBrains IDE config files
-.idea/
+.idea
