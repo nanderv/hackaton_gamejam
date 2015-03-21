@@ -15,11 +15,11 @@ from player import Player
 from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
-window = pyglet.window.Window(fullscreen=False)
 
+window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test2.json", 'rt')
+fd = pyglet.resource.file("testmap1.json", 'rt')
 m = Map.load_json(fd)
 
 

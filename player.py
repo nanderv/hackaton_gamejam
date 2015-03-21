@@ -20,9 +20,9 @@ class Player():
 
 
     def handle_input(self):
-        vx = 0
+        vx = self.object["vx"]
 
-        vy = 0
+        vy = self.object["vy"]
 
         jump = False
         if self.keyboardhandler[pyglet.window.key.D]:
@@ -39,7 +39,6 @@ class Player():
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
-        self.object["sprite"].rotation += 1
 
         mv = self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window, mv)
