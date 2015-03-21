@@ -1,4 +1,6 @@
-#from hackaton_gamejam.player import fancy_move_cam
+from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
+from special_effects import Phase_In, EffectManager
+from player import fancy_move_cam
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -6,17 +8,18 @@ __author__ = 'nander'
 import os
 
 import pyglet
-
+#frametime
+FT = 1/60
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
 from special_effects import *
+pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
 
-pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence']
 window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("testmap1.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -39,7 +42,7 @@ if "testlayer" in tl_keys:
 
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
-        if object["name"] == "player":
+        if str.lower(object["name"]) == "player":
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
         else:
             print("err")
@@ -47,21 +50,21 @@ for key in og_keys:
 
 for key in og_keys:
     for object in m.objectgroups[key].objects:
-        a = Phase_In(object, 60)
+        a = Phase_In(object, 1/FT)
         effect_manager.add_effect(a)
 @window.event
 def update(dt):
+    window.clear()
+
     player.handle_input()
     effect_manager.run_effects()
     if testlayer is not None:
         testlayer.set_opacity(128)
 
     object["rotation"] += 1
-    window.clear()
-    m.move_focus(1, 0)
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])
-pyglet.clock.schedule_interval(update, 1.0/60.0)
-pyglet.clock.set_fps_limit(60)
+pyglet.clock.schedule_interval(update, FT)
+pyglet.clock.set_fps_limit(1/FT)
 pyglet.app.run()

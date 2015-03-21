@@ -20,18 +20,18 @@ class Player():
 
 
     def handle_input(self):
-        vx = 0
+        vx = self.object["vx"]
 
-        vy = 0
+        vy = self.object["vy"]
 
         jump = False
-        if self.keyboardhandler[pyglet.window.key.D]:
+        if self.keyboardhandler[pyglet.window.key.D] and self.object["ax"]==0:
             vx += 1
-        if self.keyboardhandler[pyglet.window.key.A]:
+        if self.keyboardhandler[pyglet.window.key.A] and self.object["ax"]==0:
             vx -= 1
-        if self.keyboardhandler[pyglet.window.key.S]:
+        if self.keyboardhandler[pyglet.window.key.S] and self.object["ay"]==0:
             vy -= 1
-        if self.keyboardhandler[pyglet.window.key.W]:
+        if self.keyboardhandler[pyglet.window.key.W] and self.object["ay"]==0:
             vy += 1
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
@@ -39,6 +39,7 @@ class Player():
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
+
         mv = self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window, mv)
 
@@ -47,11 +48,11 @@ class AnimatedObject(pyglet.sprite.Sprite):
     default = None
     animations = {}
 
-    def __init__(self, default,dx,dy,dbatch,dgroup,dusage):
+    def __init__(self, default,dx,dy,dbatch,dgroup,dusage, length):
         raw = pyglet.resource.image(default)
 
-        raw_seq = pyglet.image.ImageGrid(raw, 1, 10)
-        self.default = pyglet.image.Animation.from_image_sequence(raw_seq, 0.5, True)
+        raw_seq = pyglet.image.ImageGrid(raw, 1, length)
+        self.default = pyglet.image.Animation.from_image_sequence(raw_seq, 1/6, True)
         pyglet.sprite.Sprite.__init__(self, self.default,x=dx,
                                         y=dy,
                                         batch=dbatch,
@@ -62,19 +63,25 @@ class AnimatedObject(pyglet.sprite.Sprite):
         self.image = self.animations.get(name, self.default)
 
 
-    def add_animation(self, name, default):
+    def add_animation(self, name, default, length):
         raw = pyglet.resource.image(default)
-        raw_seq = pyglet.image.ImageGrid(raw, 1, 7)
-        animation = pyglet.image.Animation.from_image_sequence(raw_seq, 60)
+        raw_seq = pyglet.image.ImageGrid(raw, 1, length)
+        animation = pyglet.image.Animation.from_image_sequence(raw_seq, 1/6)
 
         self.animations[name] = animation
 
 class PlayerAnimatedObject(AnimatedObject):
 
     def __init__(self,x,y,batch,group,usage):
-        AnimatedObject.__init__(self, "assets/entity/player/standing/standing.png",x,y,batch,group,usage)
-        self.add_animation("walking","assets/entity/player/walking/walking.png" )
-        self.add_animation("jumping","assets/entity/player/jumping/jumping.png" )
+        AnimatedObject.__init__(self, "assets/entity/player/standing/standing.png",x,y,batch,group,usage, 10)
+        self.add_animation("walking","assets/entity/player/walking/walking.png" , 10)
+        self.add_animation("jumping","assets/entity/player/jumping/jumping.png" , 10)
+
+class GooseObject(AnimatedObject):
+
+    def __init__(self,x,y,batch,group,usage):
+        AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
+
 
 
 def fancy_move_cam(object, map, window, mv):
@@ -97,18 +104,14 @@ def fancy_move_cam(object, map, window, mv):
     res_y = camY
     if win_min_x+res_x > objX:
         res_x = objX - win_min_x
-        print("moved left")
 
     if win_max_x+camX < objX:
         res_x = objX - win_max_x
-        print("moved right")
 
     if win_min_y + res_y > objY:
         res_y = objY - win_min_y
-        print("moved up")
 
     if win_max_y + res_y < objY:
          res_y = objY - win_max_y
-         print("moved down")
 
     map.set_viewport(res_x, res_y, map.w, map.h)

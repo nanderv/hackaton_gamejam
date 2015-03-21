@@ -37,6 +37,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
+from player import PlayerAnimatedObject, GooseObject
 
 __all__ = ['Map', "TileLayer", "ObjectGroup",]
 
@@ -163,6 +164,7 @@ class ObjectGroup(BaseLayer):
     `ObjectGroup.get_by_type(type)`.
 
     """
+    collision_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -232,13 +234,25 @@ class ObjectGroup(BaseLayer):
                     except (IndexError, KeyError):
                         sprite = None
                     else:
-                        sprite = Sprite(texture,
+                        if False: #str.lower(obj["name"]) == "player":
+                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        else:
+                            object_dict = {"goose": GooseObject}
+                            in_dict = False
+                            for object in object_dict.keys():
+                                if object == obj["type"]:
+                                    object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                                    in_dict = True
+                            if not in_dict:
+                                sprite = Sprite(texture,
                                         x=obj["x"]+tileoffset[0],
                                         y=self.h-obj["y"]+tileoffset[1],
                                         batch=self.map.batch,
                                         group=self.group,
                                         usage="dynamic",
                                         )
+                    if "collision" in obj.keys():
+                        self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
@@ -249,7 +263,7 @@ class ObjectGroup(BaseLayer):
 
     def move(self, object):
         movement = 1
-        jumpspeed = 30
+        jumpspeed = 8
         if "sprite" not in object.keys():
             return [0,0]
         sprite = object["sprite"]
@@ -262,22 +276,23 @@ class ObjectGroup(BaseLayer):
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
-
-
-        #^^^^
         for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
-                    vy = -jumpspeed
-                else:
-                    vy = 0
-            d_y= -vy*movement%30
+                    vy = jumpspeed
+                    jump = False
+        if vy > 0:
+            print(vy)
+            vy -= ay
+            d_y = -vy * movement
+        if vy <= 0:
+            vy -= ay
+            d_y = -vy * movement
         if vx < 0:
-            d_x = -1
-            print(d_x)
+            d_x = -movement
         elif vx > 0:
-            d_x = 1
-            print(d_x)
+            d_x = movement
+
         vx = 0
         deltas = self.dydx_checker(o_x ,o_y ,d_x, d_y, object)
         d_x = deltas[0]
@@ -291,6 +306,13 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        for a in self.collision_group:
+            if a is not object:
+            x1= [self.object["x"],self.object["y"]]
+            x2= [self.object["x"]+self.width,self.object["y"]]
+            x3= [self.object["x"],self.object["y"]-self.height]
+            x4= [self.object["x"]+self.width,self.object["y"]-self.height]
+
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
@@ -370,6 +392,9 @@ class ObjectGroup(BaseLayer):
             if b_add_x:
                 ret.append((oo_x+1, oo_y+1))
         return ret
+
+
+
 
 
 
