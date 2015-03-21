@@ -20,9 +20,9 @@ class Player():
 
 
     def handle_input(self):
-        vx = 0
+        vx = self.object["vx"]
 
-        vy = 0
+        vy = self.object["vy"]
 
         jump = False
         if self.keyboardhandler[pyglet.window.key.D]:
@@ -97,18 +97,14 @@ def fancy_move_cam(object, map, window, mv):
     res_y = camY
     if win_min_x+res_x > objX:
         res_x = objX - win_min_x
-        print("moved left")
 
     if win_max_x+camX < objX:
         res_x = objX - win_max_x
-        print("moved right")
 
     if win_min_y + res_y > objY:
         res_y = objY - win_min_y
-        print("moved up")
 
     if win_max_y + res_y < objY:
          res_y = objY - win_max_y
-         print("moved down")
 
     map.set_viewport(res_x, res_y, map.w, map.h)

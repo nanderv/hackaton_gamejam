@@ -12,11 +12,11 @@ from player import Player
 from json_map import Map
 from special_effects import *
 
-pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence']
+pyglet.resource.path = ['tiles', '','Map_Modules', 'tiles/fence', 'assets/tiles/']
 window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("alley1.json", 'rt')
 m = Map.load_json(fd)
 
 
