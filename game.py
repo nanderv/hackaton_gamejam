@@ -8,11 +8,12 @@ import pyglet
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
-from hackaton_gamejam.special_effects import *
+from special_effects import *
 
 window = pyglet.window.Window(fullscreen=False)
 window.set_vsync(0)
 # load the map
+pyglet.resource.path = [ 'tiles','']
 fd = pyglet.resource.file("test.json", 'rt')
 m = Map.load_json(fd)
 
