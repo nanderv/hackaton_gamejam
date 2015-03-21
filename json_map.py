@@ -249,7 +249,7 @@ class ObjectGroup(BaseLayer):
 
     def move(self, object):
         movement = 1
-        jumpspeed = 8
+        jumpspeed = 30
         if "sprite" not in object.keys():
             return [0,0]
         sprite = object["sprite"]
@@ -268,20 +268,16 @@ class ObjectGroup(BaseLayer):
         for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
-                    vy = jumpspeed
-                    jump = False
-        if vy > 0:
-            print(vy)
-            vy -= ay
-            d_y = -vy * movement
-        if vy == 0:
-            vy += ay
-            d_y = vy * movement
+                    vy = -jumpspeed
+                else:
+                    vy = 0
+            d_y= -vy*movement%30
         if vx < 0:
-            d_x = -movement
+            d_x = -1
+            print(d_x)
         elif vx > 0:
-            d_x = movement
-
+            d_x = 1
+            print(d_x)
         vx = 0
         deltas = self.dydx_checker(o_x ,o_y ,d_x, d_y, object)
         d_x = deltas[0]
