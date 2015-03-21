@@ -1,4 +1,4 @@
-from hackaton_gamejam.player import fancy_move_cam
+#from hackaton_gamejam.player import fancy_move_cam
 
 __author__ = 'nander'
 #/usr/bin/env python
