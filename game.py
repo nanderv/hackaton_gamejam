@@ -1,6 +1,6 @@
 from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
-from hackaton_gamejam.special_effects import Phase_In, EffectManager
-#from hackaton_gamejam.player import fancy_move_cam
+from special_effects import Phase_In, EffectManager
+from player import fancy_move_cam
 
 __author__ = 'nander'
 #/usr/bin/env python

@@ -25,13 +25,13 @@ class Player():
         vy = self.object["vy"]
 
         jump = False
-        if self.keyboardhandler[pyglet.window.key.D]:
+        if self.keyboardhandler[pyglet.window.key.D] and self.object["ax"]==0:
             vx += 1
-        if self.keyboardhandler[pyglet.window.key.A]:
+        if self.keyboardhandler[pyglet.window.key.A] and self.object["ax"]==0:
             vx -= 1
-        if self.keyboardhandler[pyglet.window.key.S]:
+        if self.keyboardhandler[pyglet.window.key.S] and self.object["ay"]==0:
             vy -= 1
-        if self.keyboardhandler[pyglet.window.key.W]:
+        if self.keyboardhandler[pyglet.window.key.W] and self.object["ay"]==0:
             vy += 1
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
