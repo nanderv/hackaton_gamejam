@@ -41,6 +41,8 @@ class Phase_Out (Effect):
         Effect.__init__(self,object, time)
 
     def run_effect(self):
+        if "sprite" not in self.object.keys():
+             return
         self.frame += 1
 
         self.object["sprite"].opacity = 255 - 255 * (self.frame/self.time)
@@ -56,6 +58,8 @@ class Phase_In (Effect):
         Effect.__init__(self,object, time)
 
     def run_effect(self):
+        if "sprite" not in self.object.keys():
+            return
         self.frame += 1
 
         self.object["sprite"].opacity = 255 * (self.frame/self.time)
@@ -65,3 +69,10 @@ class Phase_In (Effect):
             return False
         return True
 
+class Chain_Effect (Effect):
+    effects = []
+    current_effect = 0
+    def __init__(self, effects, loop):
+        pass
+    def run_effect(self):
+        pass
