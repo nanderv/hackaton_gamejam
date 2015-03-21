@@ -1,4 +1,4 @@
-
+from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
 from hackaton_gamejam.special_effects import Phase_In, EffectManager
 #from hackaton_gamejam.player import fancy_move_cam
 
@@ -13,9 +13,8 @@ os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
 from special_effects import *
-
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
-window = pyglet.window.Window(fullscreen=True, width = 800, height = 600)
+window = pyglet.window.Window(fullscreen=False)
 
 window.set_vsync(0)
 # load the map
@@ -42,7 +41,7 @@ if "testlayer" in tl_keys:
 
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
-        if object["name"] == "player":
+        if str.lower(object["name"]) == "player":
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
         else:
             print("err")
@@ -54,14 +53,14 @@ for key in og_keys:
         effect_manager.add_effect(a)
 @window.event
 def update(dt):
+    window.clear()
+
     player.handle_input()
     effect_manager.run_effects()
     if testlayer is not None:
         testlayer.set_opacity(128)
 
     object["rotation"] += 1
-    window.clear()
-    m.move_focus(1, 0)
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])

@@ -37,6 +37,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
+from hackaton_gamejam.player import PlayerAnimatedObject
 
 __all__ = ['Map', "TileLayer", "ObjectGroup",]
 
@@ -232,7 +233,10 @@ class ObjectGroup(BaseLayer):
                     except (IndexError, KeyError):
                         sprite = None
                     else:
-                        sprite = Sprite(texture,
+                        if str.lower(obj["name"]) == "player":
+                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        else:
+                            sprite = Sprite(texture,
                                         x=obj["x"]+tileoffset[0],
                                         y=self.h-obj["y"]+tileoffset[1],
                                         batch=self.map.batch,
