@@ -285,7 +285,6 @@ class ObjectGroup(BaseLayer):
                     vy = jumpspeed
                     jump = False
         if vy > 0:
-            print(vy)
             vy -= ay
             d_y = -vy * movement
         if vy <= 0:
@@ -310,7 +309,8 @@ class ObjectGroup(BaseLayer):
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
         for a in self.collision_group:
-            if a is not object:
+            print("sdf")
+            if a is not self:
                 print("hier")
                 x1 = [self.object["x"],self.object["y"]]
                 x2 = [self.object["x"]+self.width,self.object["y"]]
