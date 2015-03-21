@@ -355,7 +355,7 @@ class ObjectGroup(BaseLayer):
                     if y_check:
                         d_x = 0
                     else:
-                        return
+                        return [0,0]
 
 
         sprite.x += d_x
@@ -367,6 +367,7 @@ class ObjectGroup(BaseLayer):
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
+        return [d_x, d_y]
 
     def to_tile_coordinates(self, o_x, o_y, width, height):
         ret = []
