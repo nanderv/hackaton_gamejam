@@ -8,7 +8,8 @@ __author__ = 'nander'
 import os
 
 import pyglet
-
+#frametime
+FT = 1/60
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
@@ -18,7 +19,7 @@ window = pyglet.window.Window(fullscreen=False)
 
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("test.json", 'rt')
+fd = pyglet.resource.file("test2.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -49,7 +50,7 @@ for key in og_keys:
 
 for key in og_keys:
     for object in m.objectgroups[key].objects:
-        a = Phase_In(object, 60)
+        a = Phase_In(object, 1/FT)
         effect_manager.add_effect(a)
 @window.event
 def update(dt):
@@ -64,6 +65,6 @@ def update(dt):
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])
-pyglet.clock.schedule_interval(update, 1.0/60.0)
-pyglet.clock.set_fps_limit(60)
+pyglet.clock.schedule_interval(update, FT)
+pyglet.clock.set_fps_limit(1/FT)
 pyglet.app.run()
