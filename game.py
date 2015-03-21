@@ -25,7 +25,7 @@ window.close()
 window = pyglet.window.Window(fullscreen=True, width=wwidth, height=hheight)
 window.set_vsync(0)
 # load the map
-fd = pyglet.resource.file("testmaplong.json", 'rt')
+fd = pyglet.resource.file("testmap1.json", 'rt')
 m = Map.load_json(fd)
 
 
@@ -49,6 +49,7 @@ if "testlayer" in tl_keys:
 for key in og_keys:
     for object in  m.objectgroups[key].objects:
         if str.lower(object["name"]) == "player":
+            print(object)
             player =Player(object, m.objectgroups[key], keyboardhandler, m, window)
 
 if player is None:

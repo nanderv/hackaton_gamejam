@@ -20,6 +20,7 @@ class Player():
 
 
     def handle_input(self):
+
         vx = self.object["vx"]
 
         vy = self.object["vy"]

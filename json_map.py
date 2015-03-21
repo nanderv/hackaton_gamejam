@@ -130,7 +130,7 @@ class TileLayer(BaseLayer):
                         texture = self.map.get_texture(self[px, py])
                     except (KeyError, IndexError):
                         self.sprites[(px, py)] = None
-                    else:
+                else:
                         sprite = Sprite(texture,
                                                         x=(px*tw),
                                                         y=h-(py*th)-th,
@@ -235,32 +235,32 @@ class ObjectGroup(BaseLayer):
                         tileoffset = self.map.get_tileoffset(obj["gid"])
                     except (IndexError, KeyError):
                         sprite = None
+                else:
+                    if False:#str.lower(obj["name"]) == "player":
+                        sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
                     else:
-                        if str.lower(obj["name"]) == "player":
-                            sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
-                        else:
-                            object_dict = {"goose": GooseObject}
-                            in_dict = False
-                            for object in object_dict.keys():
-                                if object == obj["type"]:
-                                    object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
-                                    in_dict = True
-                            if not in_dict:
-                                sprite = Sprite(texture,
-                                        x=obj["x"]+tileoffset[0],
-                                        y=self.h-obj["y"]+tileoffset[1],
-                                        batch=self.map.batch,
-                                        group=self.group,
-                                        usage="dynamic",
-                                        )
+                        object_dict = {"goose": GooseObject}
+                        in_dict = False
+                        for object in object_dict.keys():
+                            if object == obj["type"]:
+                                object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                                in_dict = True
+                        if not in_dict:
+                            sprite = Sprite(texture,
+                                    x=obj["x"]+tileoffset[0],
+                                    y=self.h-obj["y"]+tileoffset[1],
+                                    batch=self.map.batch,
+                                    group=self.group,
+                                    usage="dynamic",
+                                    )
                     if "collison" in obj.keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
-                    obj["vx"]=0
-                    obj["vy"]=0
-                    obj["ax"]=0
-                    obj["ay"]=1
-                    obj["jump"]= False
+                    obj["vx"] = 0
+                    obj["vy"] = 0
+                    obj["ax"] = 0
+                    obj["ay"] = 1
+                    obj["jump"] = False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -311,10 +311,20 @@ class ObjectGroup(BaseLayer):
             del self.sprites[(o_x, o_y)]
         for a in self.collision_group:
             if a is not object:
-                x1= [self.object["x"],self.object["y"]]
-                x2= [self.object["x"]+self.width,self.object["y"]]
-                x3= [self.object["x"],self.object["y"]-self.height]
-                x4= [self.object["x"]+self.width,self.object["y"]-self.height]
+                print("hier")
+                x1 = [self.object["x"],self.object["y"]]
+                x2 = [self.object["x"]+self.width,self.object["y"]]
+                x3 = [self.object["x"],self.object["y"]-self.height]
+                x4 = [self.object["x"]+self.width,self.object["y"]-self.height]
+                y1 = [a.object["x"],a.object["y"]]
+                y2 = [a.object["x"]+a.width,a.object["y"]]
+                y3 = [a.object["x"],a.object["y"]-a.height]
+                y4 = [a.object["x"]+a.width,a.object["y"]-a.height]
+                if self.lineintersect(x1,x2,y1,y2) or self.lineintersect(x1,x2,y3,y2) or self.lineintersect(x1,x2,y4,y3) or self.lineintersect(x1,x2,y1,y4)\
+                    or self.lineintersect(x3,x2,y1,y2) or self.lineintersect(x3,x2,y3,y2) or self.lineintersect(x3,x2,y4,y3) or self.lineintersect(x3,x2,y1,y4)\
+                    or self.lineintersect(x3,x4,y1,y2) or self.lineintersect(x3,x4,y3,y2) or self.lineintersect(x3,x4,y4,y3) or self.lineintersect(x3,x4,y1,y4)\
+                    or self.lineintersect(x1,x4,y1,y2) or self.lineintersect(x1,x4,y3,y2) or self.lineintersect(x1,x4,y4,y3) or self.lineintersect(x1,x4,y1,y4):
+                    print("hoi")
 
         return [d_x, d_y]
 
@@ -349,6 +359,25 @@ class ObjectGroup(BaseLayer):
                         break
                     ix-=1
         return [ix,iy]
+
+    def line_intersect(self, p1, p2, p3, p4):
+        a1 = (p2[1]-p1[1])/(p2[0]-p1[0])
+        b1 = p1[1]%a1
+        a2 = (p3[1]-p4[1])/(p3[0]-p4[0])
+        b2 = p3[1]%a2
+        if a1/a2 == 1:
+            return False
+        x=(a2x+b2-b1)/a1
+        y=a1*x+b1
+        if (p1[0]<x<p2[0] or p2[0]<x<p1[0]) and (p1[1]<y<p2[1] or p2[1]<y<p1[1]):
+            return True
+        else:
+            return False
+
+
+
+
+
 
 
 
