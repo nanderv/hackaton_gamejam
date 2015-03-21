@@ -251,7 +251,7 @@ class ObjectGroup(BaseLayer):
                                         group=self.group,
                                         usage="dynamic",
                                         )
-                    if "collision" in obj.keys():
+                    if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
@@ -276,7 +276,7 @@ class ObjectGroup(BaseLayer):
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
-        for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
+        for a in self.to_tile_coordinates(o_x, o_y+1, object):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
                     vy = jumpspeed
@@ -296,33 +296,20 @@ class ObjectGroup(BaseLayer):
         deltas = self.dydx_checker(o_x ,o_y ,d_x, d_y, object)
         d_x = deltas[0]
         d_y = deltas[1]
+
+        self.sprites[(object["x"], object["y"])] = sprite
+        if (o_x, o_y) in self.sprites.keys():
+            del self.sprites[(o_x, o_y)]
+        for a in self.collision_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    print("sdfasf")
         sprite.x += d_x
         sprite.y -= d_y
         object["x"] += d_x
         object["y"] += d_y
         object["vy"] = vy
         object["vx"] = vx
-        self.sprites[(object["x"], object["y"])] = sprite
-        if (o_x, o_y) in self.sprites.keys():
-            del self.sprites[(o_x, o_y)]
-        for a in self.collision_group:
-            print("sdf")
-            if a is not self:
-                print("hier")
-                x1 = [self.object["x"],self.object["y"]]
-                x2 = [self.object["x"]+self.width,self.object["y"]]
-                x3 = [self.object["x"],self.object["y"]-self.height]
-                x4 = [self.object["x"]+self.width,self.object["y"]-self.height]
-                y1 = [a.object["x"],a.object["y"]]
-                y2 = [a.object["x"]+a.width,a.object["y"]]
-                y3 = [a.object["x"],a.object["y"]-a.height]
-                y4 = [a.object["x"]+a.width,a.object["y"]-a.height]
-                if self.lineintersect(x1,x2,y1,y2) or self.lineintersect(x1,x2,y3,y2) or self.lineintersect(x1,x2,y4,y3) or self.lineintersect(x1,x2,y1,y4)\
-                    or self.lineintersect(x3,x2,y1,y2) or self.lineintersect(x3,x2,y3,y2) or self.lineintersect(x3,x2,y4,y3) or self.lineintersect(x3,x2,y1,y4)\
-                    or self.lineintersect(x3,x4,y1,y2) or self.lineintersect(x3,x4,y3,y2) or self.lineintersect(x3,x4,y4,y3) or self.lineintersect(x3,x4,y1,y4)\
-                    or self.lineintersect(x1,x4,y1,y2) or self.lineintersect(x1,x4,y3,y2) or self.lineintersect(x1,x4,y4,y3) or self.lineintersect(x1,x4,y1,y4):
-                    print("hoi")
-
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
@@ -357,43 +344,51 @@ class ObjectGroup(BaseLayer):
                     ix-=1
         return [ix,iy]
 
-    def line_intersect(self, p1, p2, p3, p4):
-        a1 = (p2[1]-p1[1])/(p2[0]-p1[0])
-        b1 = p1[1]%a1
-        a2 = (p3[1]-p4[1])/(p3[0]-p4[0])
-        b2 = p3[1]%a2
-        if a1/a2 == 1:
-            return False
-        x=(a2x+b2-b1)/a1
-        y=a1*x+b1
-        if (p1[0]<x<p2[0] or p2[0]<x<p1[0]) and (p1[1]<y<p2[1] or p2[1]<y<p1[1]):
+    def intersect_object(self, a,b):
+        x1 = [a["x"],a["y"]]
+        x2 = [a["x"]+a["width"],a["y"]]
+        x3 = [a["x"],a["y"]-a["height"]]
+        x4 = [a["x"]+a["width"],a["y"]-a["height"]]
+        y1 = [b["x"],b["y"]]
+        y2 = [b["x"]+b["width"],b["y"]]
+        y3 = [b["x"],b["y"]-b["height"]]
+        y4 = [b["x"]+b["width"],b["y"]-b["height"]]
+        xmax = max(x1[0],x2[0],x3[0],x4[0])
+        ymax = max(x1[1],x2[1],x3[1],x4[1])
+        xmin = min(x1[0],x2[0],x3[0],x4[0])
+        ymin = min(x1[1],x2[1],x3[1],x4[1])
+        if (xmin<=y1[0]<=xmax and ymin<=y1[1]<=ymax)\
+            or (xmin<=y2[0]<=xmax and ymin<=y2[1]<=ymax)\
+            or (xmin<=y3[0]<=xmax and ymin<=y3[1]<=ymax)\
+            or (xmin<=y4[0]<=xmax and ymin<=y4[1]<=ymax):
             return True
-        else:
-            return False
-
-
-
-
-
-
-
+        xmax = max(y1[0],y2[0],y3[0],y4[0])
+        ymax = max(y1[1],y2[1],y3[1],y4[1])
+        xmin = min(y1[0],y2[0],y3[0],y4[0])
+        ymin = min(y1[1],y2[1],y3[1],y4[1])
+        if (xmin<=x1[0]<=xmax and ymin<=x1[1]<=ymax)\
+            or (xmin<=x2[0]<=xmax and ymin<=x2[1]<=ymax)\
+            or (xmin<=x3[0]<=xmax and ymin<=x3[1]<=ymax)\
+            or (xmin<=x4[0]<=xmax and ymin<=x4[1]<=ymax):
+            return True
+        return False
 
     def collision_detection(self, o_x, o_y, d_x, d_y,object):
         b_check =True
         if "collision" in self.map.tilelayers.keys():
-            for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
+            for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object):
                  if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                     b_check = False
             if not b_check:
                 x_check = True
-                for a in self.to_tile_coordinates(o_x+d_x, o_y, object["sprite"].width, object["sprite"].height):
+                for a in self.to_tile_coordinates(o_x+d_x, o_y, object):
                     if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                         x_check = False
                 if x_check:
                     d_y = 0
                 else:
                     y_check = True
-                    for a in self.to_tile_coordinates(o_x, o_y+d_y, object["sprite"].width, object["sprite"].height):
+                    for a in self.to_tile_coordinates(o_x, o_y+d_y, object):
                         if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                             y_check = False
                     if y_check:
@@ -402,24 +397,26 @@ class ObjectGroup(BaseLayer):
                         return [0,0]
         return[d_x,d_y]
 
-    def to_tile_coordinates(self, o_x, o_y, width, height):
+    def to_tile_coordinates(self, o_x, o_y, object):
         ret = []
-        oo_x = math.floor(o_x/width)
+        oo_x = math.floor(o_x/self.map.data["tilewidth"])
 
-        oo_y = math.floor((o_y-height)/height)
+        oo_y = math.floor(o_y/self.map.data["tileheight"])
 
-        ret.append((oo_x, oo_y))
+        tilesx = math.ceil(object["width"]/self.map.data["tilewidth"])
+        tilesy = math.ceil(object["height"]/self.map.data["tileheight"])
+        if tilesx * self.map.data["tilewidth"] == object["width"]:
+            tilesx +=1
+        if tilesy * self.map.data["tileheight"] == object["height"]:
+            tilesy +=1
 
-        b_add_x = False
 
-        if math.floor(o_x/width)*width != o_x:
-            b_add_x = True
-            ret.append((oo_x+1, oo_y))
-
-        if math.floor(o_y/height)*height != o_y:
-            ret.append((oo_x, oo_y+1))
-            if b_add_x:
-                ret.append((oo_x+1, oo_y+1))
+        for i in range(0,tilesx):
+            for j in range (0,tilesy):
+                ret.append((oo_x+i,oo_y-j))
+                print(j)
+            print(i)
+        print(ret)
         return ret
 
 
