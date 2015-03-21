@@ -37,6 +37,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
+from hackaton_gamejam.player import PlayerAnimatedObject, GooseObject
 
 __all__ = ['Map', "TileLayer", "ObjectGroup",]
 
@@ -163,6 +164,7 @@ class ObjectGroup(BaseLayer):
     `ObjectGroup.get_by_type(type)`.
 
     """
+    collision_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -232,13 +234,25 @@ class ObjectGroup(BaseLayer):
                     except (IndexError, KeyError):
                         sprite = None
                     else:
-                        sprite = Sprite(texture,
+                        if False: #str.lower(obj["name"]) == "player":
+                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                        else:
+                            object_dict = {"goose": GooseObject}
+                            in_dict = False
+                            for object in object_dict.keys():
+                                if object == obj["type"]:
+                                    object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                                    in_dict = True
+                            if not in_dict:
+                                sprite = Sprite(texture,
                                         x=obj["x"]+tileoffset[0],
                                         y=self.h-obj["y"]+tileoffset[1],
                                         batch=self.map.batch,
                                         group=self.group,
                                         usage="dynamic",
                                         )
+                    if obj["collison"] > 0:
+                        self.collision_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
