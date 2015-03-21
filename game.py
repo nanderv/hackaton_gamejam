@@ -4,10 +4,11 @@ __author__ = 'nander'
 import pyglet
 import os
 os.sys.path.insert(0, '.')
-
+from player import Player
 from json_map import Map
+from special_effects import *
 
-window = pyglet.window.Window(fullscreen=True)
+window = pyglet.window.Window(fullscreen=False)
 window.set_vsync(0)
 # load the map
 fd = pyglet.resource.file("test.json", 'rt')
@@ -23,25 +24,26 @@ m.set_viewport(0, 0, window.width, window.height)
 keyboardhandler = pyglet.window.key.KeyStateHandler()
 window.push_handlers(keyboardhandler)
 # get the object in coords (5, 3)
+og_keys = m.objectgroups.keys()
+effect_manager  = EffectManager()
+player = None
+for key in og_keys:
+    for object in  m.objectgroups[key].objects:
+        if object["name"] == "player":
+            player =Player(object, m.objectgroups[key], keyboardhandler)
+
+
+for key in og_keys:
+    for object in m.objectgroups[key].objects:
+        a = Phase_In(object, 60)
+        effect_manager.add_effect(a)
 @window.event
 def update(dt):
     og_keys = m.objectgroups.keys()
-    for key in og_keys:
-        for object in m.objectgroups[key].objects:
-            d_x = 0
-            d_y = 0
-            if keyboardhandler[pyglet.window.key.D]:
-                d_x += 1
-            if keyboardhandler[pyglet.window.key.A]:
-                d_x += -1
-            if keyboardhandler[pyglet.window.key.S]:
-                d_y += 1
-            if keyboardhandler[pyglet.window.key.W]:
-                d_y += -1
-            m.objectgroups[key].move(object, d_x, d_y)
-            object["rotation"] += 1
+    player.handle_input()
+    effect_manager.run_effects()
+
     window.clear()
-    m.invalidate()
     m.move_focus(1, 0)
     m.draw()
 
