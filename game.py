@@ -39,7 +39,6 @@ for key in og_keys:
         effect_manager.add_effect(a)
 @window.event
 def update(dt):
-    og_keys = m.objectgroups.keys()
     player.handle_input()
     effect_manager.run_effects()
 
