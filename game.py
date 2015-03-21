@@ -1,5 +1,5 @@
 from hackaton_gamejam.player import fancy_move_cam
-from hackaton_gamejam.special_effects import Phase_In
+from hackaton_gamejam.special_effects import Phase_In, EffectManager
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -13,8 +13,8 @@ from player import Player
 from json_map import Map
 from special_effects import *
 
-pyglet.resource.path = ['tiles', '', 'Map_Modules', '/tiles/fence', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
-window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
+pyglet.resource.path = ['tiles', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
+window = pyglet.window.Window(fullscreen=True, width = 800, height = 600)
 window.set_vsync(0)
 # load the map
 fd = pyglet.resource.file("test.json", 'rt')
