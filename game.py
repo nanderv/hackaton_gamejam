@@ -48,6 +48,6 @@ def update(dt):
     m.draw()
 
 print(m.tilelayers["collision"][10, 10])
-pyglet.clock.schedule_interval(update, 1.0/60.0)
-pyglet.clock.set_fps_limit(60)
+pyglet.clock.schedule_interval(update, 1.0/30.0)
+pyglet.clock.set_fps_limit(30)
 pyglet.app.run()
