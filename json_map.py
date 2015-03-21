@@ -468,7 +468,7 @@ class Map(object):
             if layer.data["visible"]:
                 layer.set_viewport(self.x, self.y, self.w, self.h)
     def move_focus(self,dx,dy):
-        self.set_focus(self.x+dx, self.y+dy)
+        self.set_focus(sdelf.x+dx, self.y+dy)
 
     def set_focus(self, x, y):
         """Sets the focus in (x, y) world coordinates."""
