@@ -244,9 +244,12 @@ class ObjectGroup(BaseLayer):
                     obj["vy"]=0
                     obj["ax"]=0
                     obj["ay"]=-1
+                    obj["jump"]= False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
+        movement = 1
+        jumpmovement = 3
         if "sprite" not in object.keys():
             return
         sprite = object["sprite"]
@@ -254,34 +257,39 @@ class ObjectGroup(BaseLayer):
         vx = object["vx"]
         d_y = 0
         d_x = 0
-        if vy !=0:
-            if vy > 0:
-                d_y = 1
-                vy -= 1
-                object["vy"] -= 1
-            else:
-                d_y = -1
-                vy += 1
-                object["vy"] += 1
-        if vx !=0:
-            if vx > 0:
-                d_x = 1
-                vx -= 1
-                object["vx"] -= 1
-            else:
-                d_x = -1
-                vx -= 1
-                object["vx"] += 1
+        jump = object["jump"]
 
         o_x = object["x"]
         o_y = object["y"]
         ax = object["ax"]
         ay = object["ay"]
         b_check = True
-        if ay != 0:
-            d_y -= ay
-        elif ax != 0:
-            d_x -= ax
+
+        for a in self.to_tile_coordinates(o_x, o_y+1, object["sprite"].width, object["sprite"].height):
+            if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                if jump:
+                    if ay!= 0:
+                        vy = jumpmovement
+                    else:
+                        vx = jumpmovement
+        if vy !=0:
+            if vy > 0:
+                d_y = movement - ay
+                vy -= movement
+                object["vy"] = vy-movement
+            else:
+                d_y = -movement - ay
+                vy += movement
+                object["vy"] = vy+ movement
+        if vx !=0:
+            if vx > 0:
+                d_x = movement - ax
+                vx -= movement
+                object["vx"] = vy-movement
+            else:
+                d_x = -movement - ax
+                vx -= movement
+                object["vx"] = vy+ movement
 
 
         if "collision" in self.map.tilelayers.keys():
@@ -306,10 +314,13 @@ class ObjectGroup(BaseLayer):
                     else:
                         return
 
+
         sprite.x += d_x
         sprite.y += d_y
         object["x"] += d_x
         object["y"] += d_y
+        object["vy"] = vy
+        object["vx"] = vx
         self.sprites[(object["x"], object["y"])] = sprite
         if (o_x, o_y) in self.sprites.keys():
             del self.sprites[(o_x, o_y)]
