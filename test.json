@@ -71,6 +71,10 @@
          "height":100,
          "name":"collision",
          "opacity":0.5,
+         "properties":
+            {
+             "collision":"1"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,

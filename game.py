@@ -1,7 +1,9 @@
 
 from gamestate import GameState, merge_two_dicts, reset_game_state
 import pyglet
-
+source1 = pyglet.media.load("city.wav")
+source2 = pyglet.media.load("forest.wav")
+source3 = pyglet.media.load("hell.wav")
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -17,12 +19,8 @@ os.sys.path.insert(0, '.')
 
 import sys
 import os
-def restart_program():
-    """Restarts the current program.
-    Note: this function does not return. Any cleanup action (like
-    saving data) must be done before calling this function."""
-    python = sys.executable
-    os.execl(python, python, * sys.argv)
+
+
 FULLSCREEN = False
 if FULLSCREEN:
     window = pyglet.window.Window(fullscreen=True)
@@ -32,7 +30,7 @@ if FULLSCREEN:
     window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
 else:
     window = pyglet.window.Window()
-
+SOUND_DEMO = True
 
 from player import Player
 from json_map import Map
@@ -42,7 +40,22 @@ print(pyglet.resource.path)
 FULLSCREEN = False
 
 
+def queue_song(aa=0):
+    print ("queueing phase")
+    gamestate = GameState.get_instance()
+    if gamestate.hippieness > 150*gamestate.musiclevel:
+        print("plusplus")
+        gamestate.music_player.eos_action = gamestate.music_player.EOS_NEXT
+        gamestate.music_player.next()
+        gamestate.musiclevel += 1
+        gamestate.hippieness += 150
 
+        gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
+    else:
+        print("loop")
+        gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
+
+    pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration)
 
 
 @window.event
@@ -54,7 +67,6 @@ def update(dt):
         gamestate.player.handle_input()
         gamestate.effect_manager.run_effects()
         gamestate.be_hippy()
-        #sample_first_joystick()
 
         gamestate.map.draw()
     else:
@@ -71,7 +83,7 @@ def update(dt):
         if gamestate.game_state =="DD":
             keyboardhandler = gamestate.keyboardhandler
             window = gamestate.window
-            window.push_handlers
+            window.push_handlers()
 
             for layer in gamestate.map.objectgroups.values():
                 layer.delete_sprites()
@@ -104,7 +116,6 @@ def update(dt):
             print("loaded your game")
             gamestate.game_state = "G"
 
-    #start_map(map)
 
 
 
@@ -119,18 +130,26 @@ def start_map(map):
 
     # set the viewport to the window dimensions
     m.set_viewport(0, 0, window.width, window.height)
-
+    gamestate.hippieness = 31-0
 
     og_keys = m.objectgroups.keys()
     effect_manager = EffectManager()
     gamestate.effect_manager = effect_manager
     player = None
     testlayer = None
-    filename = "city.wav"
-    source1 = pyglet.media.load(filename)
+
     gamestate.music_player.queue(source1)
-    gamestate.music_player.play()
-    gamestate.music_player.eos_action = EOS_LOOP
+    gamestate.music_player.queue(source2)
+    gamestate.music_player.queue(source3)
+    gamestate.musiclevel = 1
+    gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
+    gamestate.current_source = source1
+    gamestate.music_player[1].play()
+    gamestate.music_player[2].play()
+    gamestate.music_player[3].play()
+    print(gamestate.current_source.duration)
+    print(gamestate.current_source.duration-2)
+    pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
@@ -154,7 +173,7 @@ def start_game():
     window.push_handlers(keyboardhandler)
 
     gamestate.keyboardhandler = keyboardhandler
-    start_map("level123.json")
+    start_map("CityForest.json")
     pyglet.clock.schedule_interval_soft(update, FT)
     pyglet.app.run()
 

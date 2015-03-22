@@ -33,7 +33,7 @@ class GameState():
     def get_instance(cls):
         if cls.INSTANCE is None:
             cls.INSTANCE = GameState()
-        player = pyglet.media.Player()
+        cls.music_player = pyglet.media.Player()
         return cls.INSTANCE
 
     @classmethod
@@ -46,7 +46,7 @@ class GameState():
 
     current_map = "CityForest.json"
     hippieness = 0
-    music_player = None
+    music_player = []
     layer_setup = {}
     UPSCALE = 2
     window = None
@@ -56,6 +56,7 @@ class GameState():
     enabled_collision_layers = []
     enabled_death_layers = []
     enabled_climb_layers = []
+    current_source = None
 
     def start_game(self):
         game_state = "L"
@@ -123,17 +124,27 @@ class GameState():
     def tile_collide(self,x,y):
         ret = 0
         for layer in self.enabled_collision_layers:
-            ret += layer[x, y]
+            sprite = layer.sprites.get((x,y),None)
+            if sprite is not None and sprite.opacity is not None:
+                ret += layer[x, y]
         return ret
+
     def tile_death(self,x,y):
         ret = 0
         for layer in self.enabled_death_layers:
-            ret += layer[x, y]
+            sprite = layer.sprites.get((x,y),None)
+            if sprite is not None and sprite.opacity is not None:
+                print(sprite)
+                ret += layer[x, y]
         return ret
+
     def tile_climb(self,x,y):
         ret = 0
         for layer in self.enabled_climb_layers:
-            ret += layer[x, y]
+            sprite = layer.sprites.get((x,y),None)
+            if sprite is not None and sprite.opacity is not None:
+                print(sprite)
+                ret += layer[x, y]
         return ret
 
 def merge_two_dicts(x, y):
