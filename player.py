@@ -26,16 +26,16 @@ class Player():
 
         jump = False
         if (self.keyboardhandler[pyglet.window.key.D] or
-                self.keyboardhandler[pyglet.window.key.RIGHT]) and self.object["ax"] == 0:
+                self.keyboardhandler[pyglet.window.key.RIGHT]):
             vx += 1
         if (self.keyboardhandler[pyglet.window.key.A] or
-                self.keyboardhandler[pyglet.window.key.LEFT]) and self.object["ax"] == 0:
+                self.keyboardhandler[pyglet.window.key.LEFT]):
             vx -= 1
         if (self.keyboardhandler[pyglet.window.key.S] or
-                self.keyboardhandler[pyglet.window.key.DOWN]) and self.object["ay"] == 0:
+                self.keyboardhandler[pyglet.window.key.DOWN]):
             vy -= 1
         if (self.keyboardhandler[pyglet.window.key.W] or
-                self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
+                self.keyboardhandler[pyglet.window.key.UP]):
             vy += 1
             portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
