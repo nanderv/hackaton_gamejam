@@ -36,7 +36,7 @@ os.sys.path.insert(0, '.')
 ZOOM = 2
 import pyglet
 from pyglet.gl import glMatrixMode, gluOrtho2D, glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, \
-    GL_TEXTURE_MIN_FILTER, GL_NEAREST
+    GL_TEXTURE_MIN_FILTER, GL_NEAREST, glFlush
 from pyglet.gl import GL_PROJECTION
 from pyglet.gl import glLoadIdentity
 from pyglet.graphics import OrderedGroup
@@ -179,12 +179,12 @@ class TileLayer(BaseLayer):
                 layer_batch = self.map.batch3
             else:
                 layer_batch = self.map.batch
-            if "minhippieness" in self.data["properties"].keys():
-                self.min_hippieness = self.data["properties"]["minhippieness"]
+            if "min_hippieness" in self.data["properties"].keys():
+                self.min_hippieness = self.data["properties"]["min_hippieness"]
             else:
                 self.min_hippieness = 0
-            if "maxhippieness" in self.data["properties"].keys():
-                self.max_hippieness = self.data["properties"]["maxhippieness"]
+            if "max_hippieness" in self.data["properties"].keys():
+                self.max_hippieness = self.data["properties"]["max_hippieness"]
             else:
                 self.max_hippieness = 1000000000
         else:
@@ -241,8 +241,8 @@ class ObjectGroup(BaseLayer):
     """
     def delete_sprites(self):
         deleted = []
-        #if self.sprites is None:
-        return
+        if self.sprites is None:
+            return
         for key in self.sprites.keys():
             if self.sprites[key] is not None:
                 self.sprites[key].delete()
@@ -485,6 +485,11 @@ class ObjectGroup(BaseLayer):
             if a is not self:
                 if self.intersect_object(object, a):
                     print("pick up : " + str(a["id"]))
+                    a["sprite"].batch = None
+                    self.collectible_group.remove(a)
+                    gamestate = GameState.get_instance()
+                    gamestate.hippieness += 10
+                    print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
@@ -825,3 +830,4 @@ class Map(object):
         gl.glTranslatef(-int(self.x ), int(self.y ), 0)
         self.batch.draw()
         gl.glPopMatrix()
+        glFlush()

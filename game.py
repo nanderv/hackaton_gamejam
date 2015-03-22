@@ -2,7 +2,7 @@ from gamestate import GameState, merge_two_dicts, reset_game_state
 
 __author__ = 'nander'
 #/usr/bin/env python
-
+REVIVAL = True
 import os
 SCALE = 2
 import pyglet
@@ -31,7 +31,6 @@ else:
     window = pyglet.window.Window()
 
 
-
 from player import Player
 from json_map import Map
 from special_effects import *
@@ -50,8 +49,6 @@ def update(dt):
         gamestate.effect_manager = EffectManager()
         gamestate.player.handle_input()
         gamestate.effect_manager.run_effects()
-        gamestate.hippieness +=0.2
-        gamestate.hippieness = max(0, gamestate.hippieness)
         gamestate.be_hippy()
         gamestate.map.draw()
     else:
@@ -60,12 +57,15 @@ def update(dt):
             gamestate.game_state = "DDD"
         if gamestate.game_state == "DDD":
             if gamestate.keyboardhandler[pyglet.window.key.SPACE]:
-                gamestate.game_state = "DD"
+                if REVIVAL:
+                    gamestate.game_state = "G"
+                else:
+                    gamestate.game_state = "DD"
 
         if gamestate.game_state =="DD":
             keyboardhandler = gamestate.keyboardhandler
             window = gamestate.window
-
+            window.push_handlers
 
             for layer in gamestate.map.objectgroups.values():
                 layer.delete_sprites()
@@ -87,8 +87,12 @@ def update(dt):
             gamestate = reset_game_state()
             gamestate.window = window
 
-            start_map("CityForest.json")
-            gamestate.game_state = "L"
+            start_map("CityForest2.json")
+
+
+            if keyboardhandler[pyglet.window.key.SPACE]:
+                start_map("CityForest.json")
+                gamestate.game_state = "L"
 
         if gamestate.game_state == "L":
             print("loaded your game")
