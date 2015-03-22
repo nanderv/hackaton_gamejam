@@ -1,5 +1,9 @@
+
 from gamestate import GameState, merge_two_dicts, reset_game_state
 import pyglet
+source1 = pyglet.media.load("city.wav")
+source2 = pyglet.media.load("forest.wav")
+source3 = pyglet.media.load("hell.wav")
 
 # source0 = pyglet.media.load("jump.wav", streaming=False)
 # source1 = pyglet.media.load("pill.wav", streaming=False)
@@ -9,15 +13,16 @@ source0 = pyglet.media.load("forest.wav")
 # source3 = pyglet.media.load("hell.wav")
 
 __author__ = 'nander'
-# /usr/bin/env python
+#/usr/bin/env python
 REVIVAL = True
 import os
-
 SCALE = 2
 import pyglet
-# frametime
-FT = 1 / 30
+#frametime
+FT = 1/30
 os.sys.path.insert(0, '.')
+
+
 
 import sys
 import os
@@ -170,19 +175,27 @@ def start_map(map):
 		for object in m.objectgroups[key].objects:
 			a = Phase_In(object, 1 / FT)
 			effect_manager.add_effect(a)
-	gamestate.hide_false_layers()
+	gamestate.hide_false_layers
+
+    og_keys = m.objectgroups.keys()
+    effect_manager = EffectManager()
+    gamestate.effect_manager = effect_manager
+    player = None
+    testlayer = None
+
+
 
 
 def start_game():
-	gamestate = GameState.get_instance()
-	gamestate.window = window
-	keyboardhandler = pyglet.window.key.KeyStateHandler()
-	window.push_handlers(keyboardhandler)
 
-	gamestate.keyboardhandler = keyboardhandler
-	start_map("CityForest.json")
-	pyglet.clock.schedule_interval_soft(update, FT)
-	pyglet.app.run()
+    gamestate = GameState.get_instance()
+    gamestate.window = window
+    keyboardhandler = pyglet.window.key.KeyStateHandler()
+    window.push_handlers(keyboardhandler)
 
+    gamestate.keyboardhandler = keyboardhandler
+    start_map("CityForest.json")
+    pyglet.clock.schedule_interval_soft(update, FT)
+    pyglet.app.run()
 
 start_game()

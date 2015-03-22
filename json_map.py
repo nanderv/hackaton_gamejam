@@ -43,7 +43,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
-from player import PlayerAnimatedObject, GooseObject, DevilObject, EvilGooseObject, HedgehogObject, PinkElephantObject, SawBladeObject, TurtleObject
+from player import PlayerAnimatedObject, GooseObject, DevilObject, EvilGooseObject, HedgehogObject, PinkElephantObject, SawBladeObject, TurtleObject, SkullObject
 from gamestate import GameState
 __all__ = ['Map', "TileLayer", "ObjectGroup", ]
 warp_slow_x = 0.5
@@ -263,7 +263,6 @@ class ObjectGroup(BaseLayer):
     enemy_group = []
     climb_group = []
     death_group = []
-
     collectible_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
@@ -328,8 +327,6 @@ class ObjectGroup(BaseLayer):
 
         in_use = []
         for obj in self.objects:
-                if not obj["visible"]:
-                    continue
                 if "gid" in obj:
                     in_use.append((obj["x"], obj["y"]))
                     try:
@@ -344,7 +341,7 @@ class ObjectGroup(BaseLayer):
                             obj["enemy"] = False
                         else:
                             object_dict = {"goose": GooseObject, "devil":DevilObject, "evilgoose": EvilGooseObject, "hedgehog":HedgehogObject,
-                                "pink":PinkElephantObject,"saw":SawBladeObject, "turtle":TurtleObject}
+                                "pink":PinkElephantObject,"saw":SawBladeObject, "turtle":TurtleObject, "skull":SkullObject}
                             in_dict = False
                             for object in object_dict.keys():
                                 if object == obj["type"]:
@@ -364,6 +361,14 @@ class ObjectGroup(BaseLayer):
                                                 usage="dynamic",
                                 )
                                 obj["enemy"] = False
+                    obj["sprite"] = sprite
+                    obj["vx"] = 0
+                    obj["vy"] = 0
+                    obj["ay"] = 1
+                    obj["jump"] = False
+                    obj["portal"] = False
+                    obj["portaltime"] = 0
+                    obj["climb"] = False
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
@@ -374,14 +379,6 @@ class ObjectGroup(BaseLayer):
                         self.death_group.append(obj)
                     if "collectible" in obj["properties"].keys():
                         self.collectible_group.append(obj)
-                    obj["sprite"] = sprite
-                    obj["vx"] = 0
-                    obj["vy"] = 0
-                    obj["ay"] = 1
-                    obj["jump"] = False
-                    obj["portal"] = False
-                    obj["portaltime"] = 0
-                    obj["climb"] = False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -408,6 +405,8 @@ class ObjectGroup(BaseLayer):
         for a in self.to_tile_coordinates(o_x, o_y + 1, object):
             if GameState.get_instance().tile_collide(a[0], a[1]) is not 0:
                 if jump:
+                    sound = pyglet.resource.media('assets/sounds/jump.wav', streaming=False)
+                    sound.play()
                     vy = jumpspeed
                     jump = False
                 elif vy < 0:
@@ -446,6 +445,8 @@ class ObjectGroup(BaseLayer):
             if a is not self:
                 if self.intersect_object(object, a):
                     vy = int(a["properties"]["collision"])
+                    sound = pyglet.resource.media('assets/sounds/bounce.wav', streaming=False)
+                    sound.play()
         for a in self.teleporter_group:
             if teleporttime == 0 and teleporter and a is not self:
                 if self.intersect_object(object, a):
@@ -456,10 +457,14 @@ class ObjectGroup(BaseLayer):
                             d_y = x["y"] - object["y"]
                             teleporttime = 30
                             object["portal"] = False
+                            sound = pyglet.resource.media('assets/sounds/bounce.wav', streaming=False)
+                            sound.play()
         for a in self.enemy_group:
             if self.intersect_object(object, a):
                 print("lol, u died, noob")
                 GameState.get_instance().game_state ="D"
+                sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
+                sound.play()
 
 
         b_climb = False
@@ -483,25 +488,21 @@ class ObjectGroup(BaseLayer):
         object["vy"] = vy
         object["vx"] = vx
         for a in self.collectible_group:
-            if a["type"] != "city":
-                a["sprite"].opacity = 0
-            if a is not self:
-                if self.intersect_object(object, a):
+            if self.intersect_object(object, a):
                     gamestate = GameState.get_instance()
                     h = gamestate.hippieness
-                    if (a["type"] == "city" and h < 100) or \
-                        (a["type"] == "forest" and h >= 100 and h < 200) or \
-                        (a["type"] == "unicorn" and h >= 200 and h < 300) or \
-                        (a["type"] == "hell" and h >= 300):
-                        a["sprite"].batch = None
-                        self.collectible_group.remove(a)
-                        gamestate.hippieness += 10
-                        print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
+                    a["sprite"].batch = None
+                    self.collectible_group.remove(a)
+                    gamestate.hippieness += 10
+                    print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
+
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
                 print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
                 GameState.get_instance().game_state ="D"
+                sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
+                sound.play()
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
@@ -609,9 +610,19 @@ class ObjectGroup(BaseLayer):
         return ret
 
     def set_opacity(self, opacity):
+        op = opacity > 128
         for object in self.objects:
             if "sprite" in object.keys():
-                object["sprite"].opacity = opacity
+                    object["sprite"].visible = op
+
+        for tel in self.teleporter_group:
+            tel["sprite"].visible = op
+
+        for tel in self.collectible_group:
+            if tel not in self.objects:
+                tel["sprite"].visible = op
+
+
 
 
 class Tileset(object):
