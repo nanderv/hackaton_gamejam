@@ -36,7 +36,7 @@ else:
 from player import Player
 from json_map import Map
 from special_effects import *
-pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
+pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', 'assets/backgrounds']
 FULLSCREEN = False
 
 
@@ -151,7 +151,7 @@ def start_game():
     window.push_handlers(keyboardhandler)
 
     gamestate.keyboardhandler = keyboardhandler
-    start_map("CityForest.json")
+    start_map("level123.json")
     pyglet.clock.schedule_interval_soft(update, FT)
     pyglet.app.run()
 
