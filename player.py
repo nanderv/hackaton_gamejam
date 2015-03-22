@@ -21,7 +21,7 @@ class Player():
 
     def handle_input(self):
         vx = self.object["vx"]
-
+        portal = self.object["portal"]
         vy = self.object["vy"]
 
         jump = False
@@ -37,12 +37,14 @@ class Player():
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
             vy += 1
+            portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
 
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
+        self.object["portal"] = portal
 
 
         self.objectgroup.move(self.object)

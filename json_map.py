@@ -181,6 +181,7 @@ class ObjectGroup(BaseLayer):
 
     """
     collision_group = []
+    teleporter_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -272,18 +273,19 @@ class ObjectGroup(BaseLayer):
                                         )
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
+                    if "teleporter" in obj["properties"].keys():
+                        self.teleporter_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
-                    obj["ax"]=0
                     obj["ay"]=1
                     obj["jump"]= False
+                    obj["portal"]=False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
         movement = 3
         jumpmovement = 1
-
         jumpspeed = 12
         glide = 0.5
 
@@ -294,11 +296,12 @@ class ObjectGroup(BaseLayer):
         vx = object["vx"]
         d_y = 0
         d_x = 0
+        teleporter= object["portal"]
         jump = object["jump"]
         o_x = object["x"]
         o_y = object["y"]
-        ax = object["ax"]
         ay = object["ay"]
+
         for a in self.to_tile_coordinates(o_x, o_y+1, object):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
@@ -327,6 +330,15 @@ class ObjectGroup(BaseLayer):
             if a is not self:
                 if self.intersect_object(object, a):
                     print("sdfasf")
+        for a in self.teleporter_group:
+            if teleporter and a is not self:
+                if self.intersect_object(object, a):
+                    goal=a["teleporter"]
+                    for x in self.teleporter_group:
+                        if x["ID"] == goal:
+                            d_x = object["x"]-x["x"]
+                            d_y = object["y"]-y["y"]
+
         sprite.x += d_x
         sprite.y -= d_y
         object["x"] += d_x

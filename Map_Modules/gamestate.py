@@ -1,4 +1,4 @@
-from hackaton_gamejam.special_effects import FadeLayerIn, FadeLayerOut
+from special_effects import FadeLayerIn, FadeLayerOut
 
 __author__ = 'nander'
 
