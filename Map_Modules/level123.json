@@ -190,52 +190,20 @@
                  "y":527
                 }, 
                 {
-                 "gid":186,
+                 "gid":279,
                  "height":0,
-                 "id":28,
-                 "name":"devil1",
+                 "id":31,
+                 "name":"skull",
                  "properties":
                     {
 
                     },
                  "rotation":0,
-                 "type":"devil",
+                 "type":"skull",
                  "visible":true,
                  "width":0,
-                 "x":330,
-                 "y":527
-                }, 
-                {
-                 "gid":391,
-                 "height":8,
-                 "id":29,
-                 "name":"goose",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"goose",
-                 "visible":true,
-                 "width":8,
-                 "x":292,
-                 "y":289
-                }, 
-                {
-                 "gid":247,
-                 "height":0,
-                 "id":30,
-                 "name":"evil goose",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"evilgoose",
-                 "visible":true,
-                 "width":0,
-                 "x":811,
-                 "y":243
+                 "x":291,
+                 "y":417
                 }],
          "opacity":1,
          "properties":
@@ -475,7 +443,8 @@
          "opacity":1,
          "properties":
             {
-             "max_hippienes":"100"
+             "max_hippieness":"100",
+             "min_hippieness":"0"
             },
          "type":"objectgroup",
          "visible":true,
@@ -514,7 +483,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":31,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "properties":
     {
