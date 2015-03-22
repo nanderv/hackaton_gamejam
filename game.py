@@ -2,7 +2,7 @@ from gamestate import GameState, merge_two_dicts, reset_game_state
 
 __author__ = 'nander'
 #/usr/bin/env python
-
+REVIVAL = True
 import os
 SCALE = 2
 import pyglet
@@ -27,11 +27,8 @@ if FULLSCREEN:
     hheight =int(window.height / SCALE)
     window.close()
     window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
-    window.double_buffer=False
 else:
-    window = pyglet.window.Window(style=pyglet.window.Window.WINDOW_STYLE_DIALOG)
-    window.double_buffer=False
-window.set_vsync(True)
+    window = pyglet.window.Window()
 
 
 from player import Player
@@ -62,7 +59,10 @@ def update(dt):
             gamestate.game_state = "DDD"
         if gamestate.game_state == "DDD":
             if gamestate.keyboardhandler[pyglet.window.key.SPACE]:
-                gamestate.game_state = "DD"
+                if REVIVAL:
+                    gamestate.game_state = "G"
+                else:
+                    gamestate.game_state = "DD"
 
         if gamestate.game_state =="DD":
             keyboardhandler = gamestate.keyboardhandler
