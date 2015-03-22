@@ -9,13 +9,16 @@ class GameState():
     #D: Death, M: Menu, G: Game, C: Credits
 
     def __init__(self):
-        if self.INSTANCE is not None:
-            raise ValueError("An instantiation already exists!")
-            # do your init stuff
+        pass
+
     @classmethod
     def get_instance(cls):
         if cls.INSTANCE is None:
             cls.INSTANCE = GameState()
+        return cls.INSTANCE
+
+    def reset_instance(cls):
+        cls.INSTANCE = GameState()
         return cls.INSTANCE
     game_state = "L"
     INSTANCE = None
