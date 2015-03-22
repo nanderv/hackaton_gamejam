@@ -3,7 +3,23 @@ from special_effects import FadeLayerIn, FadeLayerOut, EffectManager, Phase_In
 __author__ = 'nander'
 from player import Player
 
-
+def reset_game_state():
+    gamestate= GameState.get_instance()
+    gamestate.game_state = "L"
+    gamestate.INSTANCE = None
+    gamestate.FT = 1/60
+    gamestate.current_map = "CityForest.json"
+    gamestate.hippieness = 0
+    gamestate.layer_setup = {}
+    gamestate.UPSCALE = 2
+    gamestate.window = None
+    gamestate.all_layers={}
+    gamestate.ai_list = []
+    gamestate.func = None
+    gamestate.enabled_collision_layers = []
+    gamestate.enabled_death_layers = []
+    gamestate.enabled_climb_layers = []
+    return gamestate
 
 class GameState():
     #D: Death, M: Menu, G: Game, C: Credits
@@ -17,6 +33,7 @@ class GameState():
             cls.INSTANCE = GameState()
         return cls.INSTANCE
 
+    @classmethod
     def reset_instance(cls):
         cls.INSTANCE = GameState()
         return cls.INSTANCE
@@ -71,11 +88,9 @@ class GameState():
                             if cs in self.enabled_death_layers:
                                 self.enabled_climb_layers.remove(cs)
                     if wanted_state:
-                        cs.set_opacity(255)
-                        #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
                     else:
-                        cs.set_opacity(0)
-                        #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
+                        GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     cs.curVis = wanted_state
 
     def hide_false_layers(self):
