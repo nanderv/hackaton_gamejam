@@ -273,7 +273,7 @@ class ObjectGroup(BaseLayer):
                                         )
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
-                    if "teleporter" in obj["properties"].keys():
+                    if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
@@ -281,6 +281,7 @@ class ObjectGroup(BaseLayer):
                     obj["ay"]=1
                     obj["jump"]= False
                     obj["portal"]=False
+                    obj["portaltime"]=0
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -297,6 +298,7 @@ class ObjectGroup(BaseLayer):
         d_y = 0
         d_x = 0
         teleporter= object["portal"]
+        teleporttime = object["portaltime"]
         jump = object["jump"]
         o_x = object["x"]
         o_y = object["y"]
@@ -331,16 +333,27 @@ class ObjectGroup(BaseLayer):
                 if self.intersect_object(object, a):
                     print("sdfasf")
         for a in self.teleporter_group:
-            if teleporter and a is not self:
+            if teleporttime ==0 and teleporter and a is not self:
+                print(" bitch")
                 if self.intersect_object(object, a):
-                    goal=a["teleporter"]
+                    goal=a["properties"]["teleport"]
+                    print("goal = " + str(goal))
                     for x in self.teleporter_group:
-                        if x["ID"] == goal:
-                            d_x = object["x"]-x["x"]
-                            d_y = object["y"]-y["y"]
+                        if int(x['id']) == int(goal):
+                            print(x["id"])
+                            d_x = x["x"]-object["x"]
+                            d_y = x["y"]-object["y"]
+                            teleporttime = 30
+                            object["portal"]=False
+            elif teleporter:
+                object["portal"] = False
+        if teleporttime > 0:
+            teleporttime -= 1
+
 
         sprite.x += d_x
         sprite.y -= d_y
+        object["portaltime"] = teleporttime
         object["x"] += d_x
         object["y"] += d_y
         object["vy"] = vy
