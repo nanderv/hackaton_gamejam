@@ -6,7 +6,7 @@
          "name":"Forest skyline",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -21,7 +21,7 @@
              "veryslow":"1"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -36,7 +36,7 @@
              "slow":"1"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -48,7 +48,8 @@
          "opacity":1,
          "properties":
             {
-             "climb":"1"
+             "climb":"1",
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -63,7 +64,8 @@
          "opacity":1,
          "properties":
             {
-             "death":""
+             "death":"1",
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -78,7 +80,8 @@
          "opacity":1,
          "properties":
             {
-             "collision":"1"
+             "collision":"1",
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -93,6 +96,7 @@
          "opacity":1,
          "properties":
             {
+             "max_hippieness":"100",
              "slowest":"1"
             },
          "type":"tilelayer",
@@ -108,6 +112,7 @@
          "opacity":1,
          "properties":
             {
+             "max_hippieness":"100",
              "veryslow":"1"
             },
          "type":"tilelayer",
@@ -123,6 +128,7 @@
          "opacity":1,
          "properties":
             {
+             "max_hippieness":"100",
              "slow":"1"
             },
          "type":"tilelayer",
@@ -138,7 +144,7 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"100"
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -186,7 +192,7 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"100"
+             "max_hippieness":"100"
             },
          "type":"objectgroup",
          "visible":true,
@@ -201,7 +207,7 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"100"
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -244,8 +250,8 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"120",
-             "minhippienes":"60"
+             "max_hippieness":"120",
+             "min_hippieness":"60"
             },
          "type":"tilelayer",
          "visible":true,
@@ -421,7 +427,7 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"100"
+             "max_hippienes":"100"
             },
          "type":"objectgroup",
          "visible":true,
@@ -436,7 +442,7 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"100"
+             "max_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":true,
@@ -451,8 +457,8 @@
          "opacity":1,
          "properties":
             {
-             "maxhippienes":"120",
-             "minhippienes":"80"
+             "max_hippieness":"120",
+             "min_hippieness":"80"
             },
          "type":"tilelayer",
          "visible":true,
@@ -497,6 +503,13 @@
             },
          "spacing":0,
          "tileheight":8,
+         "tileproperties":
+            {
+             "151":
+                {
+                 "maxhippieness":"100"
+                }
+            },
          "tilewidth":8
         }, 
         {
