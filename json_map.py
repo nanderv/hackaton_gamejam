@@ -147,9 +147,7 @@ class TileLayer(BaseLayer):
         in_use = []
         self.min_hippieness = 0
         self.max_hippieness = 10000000000
-        print(self.data.keys())
         if "properties" in self.data.keys():
-            print(self.data["properties"].keys())
             if "collision" in self.data["properties"].keys():
                 self.collision_layer = True
             if "slow" in self.data["properties"].keys():
@@ -160,10 +158,8 @@ class TileLayer(BaseLayer):
                 layer_batch = self.map.batch
             if "minhippieness" in self.data["properties"].keys():
                 self.min_hippieness = self.data["properties"]["minhippieness"]
-                print(self.data["properties"]["minhippieness"])
             else:
                 self.min_hippieness = 0
-                print("auto")
             if "maxhippieness" in self.data["properties"].keys():
                 self.max_hippieness = self.data["properties"]["maxhippieness"]
             else:
@@ -290,7 +286,6 @@ class ObjectGroup(BaseLayer):
 
         in_use = []
         for obj in self.objects:
-            if x - tw < obj["x"] < x + w + tw and y - th < obj["y"] < y + h + th:
                 if not obj["visible"]:
                     continue
                 if "gid" in obj:
@@ -320,10 +315,12 @@ class ObjectGroup(BaseLayer):
                                                 group=self.group,
                                                 usage="dynamic",
                                 )
+                    print(obj["properties"].keys())
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
+                        print("teleporter added")
                     if "climb" in obj["properties"].keys():
                         self.climb_group.append(obj)
                     if "death" in obj["properties"].keys():
