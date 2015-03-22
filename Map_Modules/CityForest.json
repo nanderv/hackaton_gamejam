@@ -649,7 +649,9 @@
          "opacity":1,
          "properties":
             {
-             "collision":"0"
+             "collision":"0",
+             "max_hippieness":"400",
+             "min_hippieness":"300"
             },
          "type":"tilelayer",
          "visible":true,
@@ -664,7 +666,9 @@
          "opacity":1,
          "properties":
             {
-             "death":"0"
+             "death":"0",
+             "max_hippieness":"400",
+             "min_hippieness":"300"
             },
          "type":"tilelayer",
          "visible":true,
@@ -709,6 +713,11 @@
          "height":80,
          "name":"Unicorn Skyline",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -930,6 +939,11 @@
          "height":80,
          "name":"Unicorn Rainbow",
          "opacity":0.349999994039536,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -941,6 +955,11 @@
          "height":80,
          "name":"Unicorn Background",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -952,6 +971,11 @@
          "height":80,
          "name":"Unicorn Background Details",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -963,6 +987,11 @@
          "height":80,
          "name":"Unicorn Player Layer",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -1066,6 +1095,11 @@
          "height":80,
          "name":"Unicorn Foreground",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"400",
+             "min_hippieness":"300"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
