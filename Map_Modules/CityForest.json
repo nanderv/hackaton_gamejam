@@ -318,6 +318,22 @@
                  "width":0,
                  "x":66,
                  "y":512
+                }, 
+                {
+                 "gid":2945,
+                 "height":16,
+                 "id":22,
+                 "name":"collecttest",
+                 "properties":
+                    {
+                     "collectible":"1"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":180.5,
+                 "y":190.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -387,7 +403,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":11,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "properties":
     {
@@ -425,6 +441,21 @@
          "spacing":0,
          "tileheight":8,
          "tilewidth":8
+        }, 
+        {
+         "firstgid":2945,
+         "image":"..\/assets\/tiles\/forest_tiles.png",
+         "imageheight":480,
+         "imagewidth":256,
+         "margin":0,
+         "name":"forest16",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":8,
  "version":1,

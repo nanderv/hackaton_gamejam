@@ -221,6 +221,7 @@ class ObjectGroup(BaseLayer):
     teleporter_group = []
     climb_group = []
     death_group = []
+    enemy_group = []
 
     collectible_group = []
     def __init__(self, data, map):
@@ -327,6 +328,8 @@ class ObjectGroup(BaseLayer):
                         self.death_group.append(obj)
                     if "collectible" in obj["properties"].keys():
                         self.collectible_group.append(obj)
+                    if "enemy" in  obj["properties"].keys():
+                        self.enemy_group.append(obj)
 
                     obj["sprite"] = sprite
                     obj["vx"] = 0
@@ -432,7 +435,14 @@ class ObjectGroup(BaseLayer):
         for a in self.collectible_group:
             if a is not self:
                 if self.intersect_object(object, a):
-                    print("pick up : " + str(a["id"]))
+                    a["sprite"].batch = None
+                    self.collectible_group.remove(a)
+                    GameState.get_instance().hippieness += 10
+        for a in self.enemy_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    print(" enemy collision")
+
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if self.map.tilelayers["death"][a[0], a[1]] is not 0:
