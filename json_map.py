@@ -323,8 +323,11 @@ class ObjectGroup(BaseLayer):
                 d_y = -vy * jumpmovement
         if vy <= 0:
             if climb:
-                vy = -1
-                d_y = movement
+                if vy == 0:
+                    d_y = 0
+                else:
+                    d_y = movement
+                vy = 0
             else:
                 vy -= ay
                 d_y = -int(vy * jumpmovement*glide)
@@ -356,17 +359,18 @@ class ObjectGroup(BaseLayer):
                             teleporttime = 30
                             object["portal"]=False
         b_climb = False
-        for a in self.climb_group:
-            if a is not self:
-                if self.intersect_object(object, a):
+        for a in self.to_tile_coordinates(object["x"], object["y"], object):
+            if self.map.tilelayers["climb"][a[0], a[1]] is not 0:
                     b_climb= True
-        object["climb"]=b_climb
+        if b_climb:
+            vy=0
+            object["climb"]=True
+        else:
+            object["climb"]=False
         if teleporter:
             object["portal"] = False
         if teleporttime > 0:
             teleporttime -= 1
-
-
         sprite.x += d_x
         sprite.y -= d_y
         object["portaltime"] = teleporttime
