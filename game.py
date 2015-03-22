@@ -1,4 +1,4 @@
-from gamestate import GameState
+from gamestate import GameState, merge_two_dicts
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -7,7 +7,7 @@ import os
 SCALE = 2
 import pyglet
 #frametime
-FT = 1/60
+FT = 1/30
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
@@ -35,11 +35,13 @@ def update(dt):
     gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
-    gamestate.map.draw()
     gamestate.hippieness +=1
-    gamestate.be_hippy()
-
     gamestate.hippieness = max(0, gamestate.hippieness)
+    gamestate.be_hippy()
+    gamestate.map.draw()
+
+
+
 
 def start_map(map):
     # load the map
@@ -64,7 +66,7 @@ def start_map(map):
     player = None
     testlayer = None
     tl_keys = m.tilelayers.keys()
-
+    gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
         for object in  m.objectgroups[key].objects:
             if str.lower(object["name"]) == "player":

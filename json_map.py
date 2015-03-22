@@ -31,6 +31,7 @@ any path information must be removed from the tileset.
 import math
 import os
 import json
+
 os.sys.path.insert(0, '.')
 ZOOM = 2
 import pyglet
@@ -44,22 +45,25 @@ from pyglet.sprite import Sprite
 from pyglet import gl
 from player import PlayerAnimatedObject, GooseObject
 from gamestate import GameState
-__all__ = ['Map', "TileLayer", "ObjectGroup",]
+
+__all__ = ['Map', "TileLayer", "ObjectGroup", ]
 warp_slow_x = 0.5
 warp_slow_y = 0.5
 warp_very_slow_x = 0.3
 warp_very_slow_y = 0.3
+
+
 def get_texture_sequence(filename, tilewidth=32, tileheight=32, margin=1, spacing=1, nearest=False):
     """Returns a texture sequence of a grid generated from a tile set."""
 
     image = pyglet.resource.image(filename)
-    region = image.get_region(margin, margin, image.width-margin*2, image.height-margin*2)
+    region = image.get_region(margin, margin, image.width - margin * 2, image.height - margin * 2)
     grid = pyglet.image.ImageGrid(region,
-                                  int(region.height/tileheight),
-                                  int(region.width/tilewidth),
+                                  int(region.height / tileheight),
+                                  int(region.width / tilewidth),
                                   row_padding=spacing,
                                   column_padding=spacing,
-                                  )
+    )
 
     texture = grid.get_texture_sequence()
 
@@ -82,6 +86,7 @@ class BaseLayer(object):
     min_hippieness = 0
     max_hippieness = 1000000000
     curVis = False
+
     def __init__(self, data, map):
         self.data = data
         self.map = map
@@ -106,6 +111,7 @@ class TileLayer(BaseLayer):
     """
     sprites = None
     opacity = 255
+
     def __iter__(self):
         return iter(self.data)
 
@@ -114,15 +120,17 @@ class TileLayer(BaseLayer):
             raise TypeError("tuple expected")
 
         x, y = index
-        return int(x+y*self.map.data["width"]) in self.data["data"]
+        return int(x + y * self.map.data["width"]) in self.data["data"]
 
     def __getitem__(self, index):
         if type(index) != tuple:
             raise TypeError("tuple expected")
 
         x, y = index
-        return self.data["data"][int(x+y*self.map.data["width"])]
+        return self.data["data"][int(x + y * self.map.data["width"])]
+
     one_time = True
+
     def set_viewport(self, x, y, w, h):
         if not self.one_time:
             return
@@ -141,7 +149,7 @@ class TileLayer(BaseLayer):
         print(self.data.keys())
         if "properties" in self.data.keys():
             print(self.data["properties"].keys())
-            if  "slow" in self.data["properties"].keys():
+            if "slow" in self.data["properties"].keys():
                 layer_batch = self.map.batch2
             elif "veryslow" in self.data["properties"].keys():
                 layer_batch = self.map.batch3
@@ -160,10 +168,10 @@ class TileLayer(BaseLayer):
         else:
             layer_batch = self.map.batch
 
-        for j in yrange(0, self.map.data["height"]*th, th):
-            py = j//th
-            for i in yrange(0, self.map.data["width"]*tw, tw):
-                px = i//tw
+        for j in yrange(0, self.map.data["height"] * th, th):
+            py = j // th
+            for i in yrange(0, self.map.data["width"] * tw, tw):
+                px = i // tw
                 in_use.append((px, py))
                 if (px, py) not in self.sprites:
                     try:
@@ -172,16 +180,17 @@ class TileLayer(BaseLayer):
                         self.sprites[(px, py)] = None
                     else:
                         sprite = Sprite(texture,
-                                                        x=(px*tw),
-                                                        y=h-(py*th)-th,
-                                                        batch=self.map.batch,
-                                                        group=self.group,
-                                                        usage="static",
-                                                        )
+                                        x=(px * tw),
+                                        y=h - (py * th) - th,
+                                        batch=self.map.batch,
+                                        group=self.group,
+                                        usage="static",
+                        )
                         sprite.opacity = self.opacity
                         self.sprites[(px, py)] = sprite
 
     old_group = None
+
     def set_opacity(self, opacity):
         self.opacity = opacity
         if self.sprites is None:
@@ -189,9 +198,7 @@ class TileLayer(BaseLayer):
         for spr in self.sprites.keys():
             sprite = self.sprites[spr]
             if sprite is not None:
-                    sprite.opacity = opacity
-
-
+                sprite.opacity = opacity
 
 
 class ObjectGroup(BaseLayer):
@@ -213,6 +220,8 @@ class ObjectGroup(BaseLayer):
     collision_group = []
     teleporter_group = []
     climb_group = []
+    death_group = []
+
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -233,8 +242,8 @@ class ObjectGroup(BaseLayer):
             if otype not in self._index_type:
                 self._index_type[otype] = []
 
-            x = int(obj["x"])//self.map.data["tilewidth"]
-            y = int(obj["y"])//self.map.data["tileheight"]-1
+            x = int(obj["x"]) // self.map.data["tilewidth"]
+            y = int(obj["y"]) // self.map.data["tileheight"] - 1
             if (x, y) not in self._xy_index:
                 self._xy_index[x, y] = []
 
@@ -243,7 +252,7 @@ class ObjectGroup(BaseLayer):
             self._xy_index[x, y].append(self.objects[-1])
 
         # XXX: is this useful AT ALL?
-        self.objects.sort(key=lambda obj: obj["x"]+obj["y"]*self.map.data["width"])
+        self.objects.sort(key=lambda obj: obj["x"] + obj["y"] * self.map.data["width"])
 
     def __iter__(self):
         return iter(self.objects)
@@ -263,7 +272,9 @@ class ObjectGroup(BaseLayer):
 
     def get_by_type(self, otype):
         return self._index_type[otype]
+
     one_time = True
+
     def set_viewport(self, x, y, w, h):
         if not self.one_time:
             return
@@ -274,7 +285,7 @@ class ObjectGroup(BaseLayer):
 
         in_use = []
         for obj in self.objects:
-            if x-tw < obj["x"] < x+w+tw and y-th < obj["y"] < y+h+th:
+            if x - tw < obj["x"] < x + w + tw and y - th < obj["y"] < y + h + th:
                 if not obj["visible"]:
                     continue
                 if "gid" in obj:
@@ -286,52 +297,57 @@ class ObjectGroup(BaseLayer):
                         sprite = None
                     else:
                         if str.lower(obj["name"]) == "player":
-                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                            sprite = PlayerAnimatedObject(obj["x"] + tileoffset[0], self.h - obj["y"] + tileoffset[1],
+                                                          self.map.batch, self.group, "dynamic", )
                         else:
                             object_dict = {"goose": GooseObject}
                             in_dict = False
                             for object in object_dict.keys():
                                 if object == obj["type"]:
-                                    object_dict[object](obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                                    object_dict[object](obj["x"] + tileoffset[0], self.h - obj["y"] + tileoffset[1],
+                                                        self.map.batch, self.group, "dynamic", )
                                     in_dict = True
                             if not in_dict:
                                 sprite = Sprite(texture,
-                                        x=obj["x"]+tileoffset[0],
-                                        y=self.h-obj["y"]+tileoffset[1],
-                                        batch=self.map.batch,
-                                        group=self.group,
-                                        usage="dynamic",
-                                        )
+                                                x=obj["x"] + tileoffset[0],
+                                                y=self.h - obj["y"] + tileoffset[1],
+                                                batch=self.map.batch,
+                                                group=self.group,
+                                                usage="dynamic",
+                                )
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
                     if "climb" in obj["properties"].keys():
                         self.climb_group.append(obj)
+                    if "death" in obj["properties"].keys():
+                        self.death_group.append(obj)
                     obj["sprite"] = sprite
-                    obj["vx"]=0
-                    obj["vy"]=0
-                    obj["ay"]=1
-                    obj["jump"]= False
-                    obj["portal"]=False
-                    obj["portaltime"]=0
-                    obj["climb"]=False
+                    obj["vx"] = 0
+                    obj["vy"] = 0
+                    obj["ay"] = 1
+                    obj["jump"] = False
+                    obj["portal"] = False
+                    obj["portaltime"] = 0
+                    obj["climb"] = False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
-        movement = 3
+        movement = 6
         jumpmovement = 1
         jumpspeed = 12
+        boostspeed = 16
         glide = 0.5
 
         if "sprite" not in object.keys():
-            return [0,0]
+            return [0, 0]
         sprite = object["sprite"]
         vy = object["vy"]
         vx = object["vx"]
         d_y = 0
         d_x = 0
-        teleporter= object["portal"]
+        teleporter = object["portal"]
         teleporttime = object["portaltime"]
         climb = object["climb"]
         jump = object["jump"]
@@ -339,7 +355,7 @@ class ObjectGroup(BaseLayer):
         o_y = object["y"]
         ay = object["ay"]
 
-        for a in self.to_tile_coordinates(o_x, o_y+1, object):
+        for a in self.to_tile_coordinates(o_x, o_y + 1, object):
             if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                 if jump:
                     vy = jumpspeed
@@ -353,18 +369,21 @@ class ObjectGroup(BaseLayer):
                 d_y = -vy * jumpmovement
         if vy <= 0:
             if climb:
-                vy = -1
-                d_y = movement
+                if vy == 0:
+                    d_y = 0
+                else:
+                    d_y = movement
+                vy = 0
             else:
                 vy -= ay
-                d_y = -int(vy * jumpmovement*glide)
+                d_y = -int(vy * jumpmovement * glide)
         if vx < 0:
             d_x = -movement
         elif vx > 0:
             d_x = movement
 
         vx = 0
-        deltas = self.dydx_checker(o_x ,o_y ,d_x, d_y, object)
+        deltas = self.dydx_checker(o_x, o_y, d_x, d_y, object)
         d_x = deltas[0]
         d_y = deltas[1]
 
@@ -374,29 +393,30 @@ class ObjectGroup(BaseLayer):
         for a in self.collision_group:
             if a is not self:
                 if self.intersect_object(object, a):
-                    print("sdfasf")
+                    vy = int(a["properties"]["collision"])
         for a in self.teleporter_group:
-            if teleporttime ==0 and teleporter and a is not self:
+            if teleporttime == 0 and teleporter and a is not self:
                 if self.intersect_object(object, a):
-                    goal=a["properties"]["teleport"]
+                    goal = a["properties"]["teleport"]
                     for x in self.teleporter_group:
                         if int(x['id']) == int(goal):
-                            d_x = x["x"]-object["x"]
-                            d_y = x["y"]-object["y"]
+                            d_x = x["x"] - object["x"]
+                            d_y = x["y"] - object["y"]
                             teleporttime = 30
-                            object["portal"]=False
+                            object["portal"] = False
         b_climb = False
-        for a in self.climb_group:
-            if a is not self:
-                if self.intersect_object(object, a):
-                    b_climb= True
-        object["climb"]=b_climb
+        for a in self.to_tile_coordinates(object["x"], object["y"], object):
+            if self.map.tilelayers["climb"][a[0], a[1]] is not 0:
+                b_climb = True
+        if b_climb:
+            vy = 0
+            object["climb"] = True
+        else:
+            object["climb"] = False
         if teleporter:
             object["portal"] = False
         if teleporttime > 0:
             teleporttime -= 1
-
-
         sprite.x += d_x
         sprite.y -= d_y
         object["portaltime"] = teleporttime
@@ -404,6 +424,10 @@ class ObjectGroup(BaseLayer):
         object["y"] += d_y
         object["vy"] = vy
         object["vx"] = vx
+
+        for a in self.to_tile_coordinates(object["x"], object["y"], object):
+            if self.map.tilelayers["death"][a[0], a[1]] is not 0:
+                print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
@@ -411,103 +435,102 @@ class ObjectGroup(BaseLayer):
         ix = 0
         # eerst over y itereren dan x
         if d_y != 0:
-            if d_y >0 :
+            if d_y > 0:
                 for i in range(0, d_y):
-                    result=self.collision_detection(o_x,o_y+i,0,1,object)
+                    result = self.collision_detection(o_x, o_y + i, 0, 1, object)
                     if result[1] != 1:
                         break
-                    iy+=1
+                    iy += 1
             else:
                 for i in range(0, d_y, -1):
-                    result=self.collision_detection(o_x,o_y+i,0,-1,object)
+                    result = self.collision_detection(o_x, o_y + i, 0, -1, object)
                     if result[1] != -1:
                         break
                     iy -= 1
         if d_x != 0:
-            if d_x >0:
+            if d_x > 0:
                 for i in range(0, d_x):
-                    result=self.collision_detection(o_x+i,o_y+iy,1,0,object)
+                    result = self.collision_detection(o_x + i, o_y + iy, 1, 0, object)
                     if result[0] != 1:
                         break
-                    ix+=1
-            else :
-                for i in range(0, d_x,-1):
-                    result=self.collision_detection(o_x+i,o_y+iy,-1,0,object)
+                    ix += 1
+            else:
+                for i in range(0, d_x, -1):
+                    result = self.collision_detection(o_x + i, o_y + iy, -1, 0, object)
                     if result[0] != -1:
                         break
-                    ix-=1
-        return [ix,iy]
+                    ix -= 1
+        return [ix, iy]
 
-    def intersect_object(self, a,b):
-        x1 = [a["x"],a["y"]]
-        x2 = [a["x"]+a["width"],a["y"]]
-        x3 = [a["x"],a["y"]-a["height"]]
-        x4 = [a["x"]+a["width"],a["y"]-a["height"]]
-        y1 = [b["x"],b["y"]]
-        y2 = [b["x"]+b["width"],b["y"]]
-        y3 = [b["x"],b["y"]-b["height"]]
-        y4 = [b["x"]+b["width"],b["y"]-b["height"]]
-        xmax = max(x1[0],x2[0],x3[0],x4[0])
-        ymax = max(x1[1],x2[1],x3[1],x4[1])
-        xmin = min(x1[0],x2[0],x3[0],x4[0])
-        ymin = min(x1[1],x2[1],x3[1],x4[1])
-        if (xmin<=y1[0]<=xmax and ymin<=y1[1]<=ymax)\
-            or (xmin<=y2[0]<=xmax and ymin<=y2[1]<=ymax)\
-            or (xmin<=y3[0]<=xmax and ymin<=y3[1]<=ymax)\
-            or (xmin<=y4[0]<=xmax and ymin<=y4[1]<=ymax):
+    def intersect_object(self, a, b):
+        x1 = [a["x"], a["y"]]
+        x2 = [a["x"] + a["width"], a["y"]]
+        x3 = [a["x"], a["y"] - a["height"]]
+        x4 = [a["x"] + a["width"], a["y"] - a["height"]]
+        y1 = [b["x"], b["y"]]
+        y2 = [b["x"] + b["width"], b["y"]]
+        y3 = [b["x"], b["y"] - b["height"]]
+        y4 = [b["x"] + b["width"], b["y"] - b["height"]]
+        xmax = max(x1[0], x2[0], x3[0], x4[0])
+        ymax = max(x1[1], x2[1], x3[1], x4[1])
+        xmin = min(x1[0], x2[0], x3[0], x4[0])
+        ymin = min(x1[1], x2[1], x3[1], x4[1])
+        if (xmin <= y1[0] <= xmax and ymin <= y1[1] <= ymax) \
+                or (xmin <= y2[0] <= xmax and ymin <= y2[1] <= ymax) \
+                or (xmin <= y3[0] <= xmax and ymin <= y3[1] <= ymax) \
+                or (xmin <= y4[0] <= xmax and ymin <= y4[1] <= ymax):
             return True
-        xmax = max(y1[0],y2[0],y3[0],y4[0])
-        ymax = max(y1[1],y2[1],y3[1],y4[1])
-        xmin = min(y1[0],y2[0],y3[0],y4[0])
-        ymin = min(y1[1],y2[1],y3[1],y4[1])
-        if (xmin<=x1[0]<=xmax and ymin<=x1[1]<=ymax)\
-            or (xmin<=x2[0]<=xmax and ymin<=x2[1]<=ymax)\
-            or (xmin<=x3[0]<=xmax and ymin<=x3[1]<=ymax)\
-            or (xmin<=x4[0]<=xmax and ymin<=x4[1]<=ymax):
+        xmax = max(y1[0], y2[0], y3[0], y4[0])
+        ymax = max(y1[1], y2[1], y3[1], y4[1])
+        xmin = min(y1[0], y2[0], y3[0], y4[0])
+        ymin = min(y1[1], y2[1], y3[1], y4[1])
+        if (xmin <= x1[0] <= xmax and ymin <= x1[1] <= ymax) \
+                or (xmin <= x2[0] <= xmax and ymin <= x2[1] <= ymax) \
+                or (xmin <= x3[0] <= xmax and ymin <= x3[1] <= ymax) \
+                or (xmin <= x4[0] <= xmax and ymin <= x4[1] <= ymax):
             return True
         return False
 
-    def collision_detection(self, o_x, o_y, d_x, d_y,object):
-        b_check =True
+    def collision_detection(self, o_x, o_y, d_x, d_y, object):
+        b_check = True
         if "collision" in self.map.tilelayers.keys():
-            for a in self.to_tile_coordinates(o_x+d_x, o_y+d_y, object):
-                 if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+            for a in self.to_tile_coordinates(o_x + d_x, o_y + d_y, object):
+                if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                     b_check = False
             if not b_check:
                 x_check = True
-                for a in self.to_tile_coordinates(o_x+d_x, o_y, object):
+                for a in self.to_tile_coordinates(o_x + d_x, o_y, object):
                     if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                         x_check = False
                 if x_check:
                     d_y = 0
                 else:
                     y_check = True
-                    for a in self.to_tile_coordinates(o_x, o_y+d_y, object):
+                    for a in self.to_tile_coordinates(o_x, o_y + d_y, object):
                         if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
                             y_check = False
                     if y_check:
                         d_x = 0
                     else:
-                        return [0,0]
-        return[d_x,d_y]
+                        return [0, 0]
+        return [d_x, d_y]
 
     def to_tile_coordinates(self, o_x, o_y, object):
         ret = []
-        oo_x = math.floor(o_x/self.map.data["tilewidth"])
+        oo_x = math.floor(o_x / self.map.data["tilewidth"])
 
-        oo_y = math.floor(o_y/self.map.data["tileheight"])
+        oo_y = math.floor(o_y / self.map.data["tileheight"])
 
-        tilesx = math.ceil(object["width"]/self.map.data["tilewidth"])
-        tilesy = math.ceil(object["height"]/self.map.data["tileheight"])
+        tilesx = math.ceil(object["width"] / self.map.data["tilewidth"])
+        tilesy = math.ceil(object["height"] / self.map.data["tileheight"])
         if tilesx * self.map.data["tilewidth"] == object["width"]:
-            tilesx +=1
+            tilesx += 1
         if tilesy * self.map.data["tileheight"] == object["height"]:
-            tilesy +=1
+            tilesy += 1
 
-
-        for i in range(0,tilesx):
-            for j in range (0,tilesy):
-                ret.append((oo_x+i,oo_y-j))
+        for i in range(0, tilesx):
+            for j in range(0, tilesy):
+                ret.append((oo_x + i, oo_y - j))
 
         return ret
 
@@ -517,32 +540,17 @@ class ObjectGroup(BaseLayer):
                 object["sprite"].opacity = opacity
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Tileset(object):
     """Manages a tileset and it's used internally by TileLayer."""
+
     def __init__(self, data, nearest=False):
         self.data = data
 
         # used to convert coordinates of the grid
-        self.columns = (self.data["imagewidth"]-self.data["spacing"]*2)//(self.data["tilewidth"]-self.data["margin"])
-        self.rows = (self.data["imageheight"]-self.data["spacing"]*2)//(self.data["tileheight"]-self.data["margin"])
+        self.columns = (self.data["imagewidth"] - self.data["spacing"] * 2) // (
+        self.data["tilewidth"] - self.data["margin"])
+        self.rows = (self.data["imageheight"] - self.data["spacing"] * 2) // (
+        self.data["tileheight"] - self.data["margin"])
 
         # the image will be accessed using pyglet resources
         self.image = os.path.basename(self.data["image"])
@@ -551,7 +559,7 @@ class Tileset(object):
                                             self.data["margin"],
                                             self.data["spacing"],
                                             nearest=False,
-                                            )
+        )
 
     def __getitem__(self, index):
         return self.texture[index]
@@ -571,7 +579,7 @@ class Map(object):
     def __init__(self, data, nearest=False):
         self.data = data
 
-        self.tilesets = {} # the order is not important
+        self.tilesets = {}  # the order is not important
 
         self.layers = []
         self.tilelayers = {}
@@ -610,8 +618,8 @@ class Map(object):
         self.fy = None
 
         # useful (size in pixels)
-        self.p_width = self.data["width"]*self.data["tilewidth"]
-        self.p_height = self.data["height"]*self.data["tileheight"]
+        self.p_width = self.data["width"] * self.data["tilewidth"]
+        self.p_height = self.data["height"] * self.data["tileheight"]
 
         # build a texture index converting pyglet indexing of the texture grid
         # to tiled coordinate system
@@ -620,19 +628,22 @@ class Map(object):
         for tileset in self.tilesets.values():
             for y in range(tileset.rows):
                 for x in range(tileset.columns):
-                    self.texture_index[x+y*tileset.columns+tileset.data["firstgid"]] = \
-                            tileset[(tileset.rows-1-y),x]
+                    self.texture_index[x + y * tileset.columns + tileset.data["firstgid"]] = \
+                        tileset[(tileset.rows - 1 - y), x]
 
                     # TODO: test this!
                     if "tileoffset" in tileset.data:
-                        self.tileoffset_index[x+y*tileset.columns+tileset.data["firstgid"]] = \
-                                (tileset.data["tileoffset"]["x"], tileset.data["tileoffset"]["y"])
+                        self.tileoffset_index[x + y * tileset.columns + tileset.data["firstgid"]] = \
+                            (tileset.data["tileoffset"]["x"], tileset.data["tileoffset"]["y"])
 
     def invalidate(self):
         """Forces a batch update of the map."""
         self.set_viewport(self.x, self.y, self.w, self.h, True)
-    def move_viewport (self,x,y):
-        self.set_viewport(self.x+x,self.y+y,self.w,self.h)
+
+    def move_viewport(self, x, y):
+        self.set_viewport(self.x + x, self.y + y, self.w, self.h)
+
+    first = True
 
     def set_viewport(self, x, y, w, h, force=False):
         """
@@ -644,24 +655,24 @@ class Map(object):
         # x and y can be floats
         vx = max(x, 0)
         vy = max(y, 0)
-        vx = min(vx, (self.p_width)-w)
-        vy = min(vy, (self.p_height)-h)
+        vx = min(vx, (self.p_width) - w)
+        vy = min(vy, (self.p_height) - h)
         vw = int(w)
         vh = int(h)
 
-        if not any([force, vx!=self.x, vy!=self.y, vw!=self.w, vh!=self.h]):
+        if not any([force, vx != self.x, vy != self.y, vw != self.w, vh != self.h]):
             return
 
         self.x = vx
         self.y = vy
         self.w = vw
         self.h = vh
-
         for layer in self.layers:
             if layer.data["visible"]:
                 layer.set_viewport(self.x, self.y, self.w, self.h)
-    def move_focus(self,dx,dy):
-        self.set_focus(self.x+dx, self.y+dy)
+
+    def move_focus(self, dx, dy):
+        self.set_focus(self.x + dx, self.y + dy)
 
     def set_focus(self, x, y):
         """Sets the focus in (x, y) world coordinates."""
@@ -673,14 +684,14 @@ class Map(object):
         self.fx = x
         self.fy = y
 
-        vx = max(x-(self.w//2), 0)
-        vy = max(y-(self.h//2), 0)
+        vx = max(x - (self.w // 2), 0)
+        vy = max(y - (self.h // 2), 0)
 
-        if vx+(self.w//2) > self.p_width:
-            vx = self.p_width-self.w
+        if vx + (self.w // 2) > self.p_width:
+            vx = self.p_width - self.w
 
-        if vy+(self.h//2) > self.p_height:
-            vy = self.p_height-self.h
+        if vy + (self.h // 2) > self.p_height:
+            vy = self.p_height - self.h
 
         self.set_viewport(vx, vy, self.w, self.h)
 
@@ -690,7 +701,7 @@ class Map(object):
 
         Returns a (x, y) tuple.
         """
-        return x-self.x, self.h-(y-self.y)
+        return x - self.x, self.h - (y - self.y)
 
     def get_texture(self, gid):
         """
@@ -715,7 +726,7 @@ class Map(object):
         Using this value plus one will ensure the sprite will be drawn
         over the map.
         """
-        return BaseLayer.groups-1
+        return BaseLayer.groups - 1
 
     @staticmethod
     def load_json(fileobj, nearest=False):
@@ -734,34 +745,21 @@ class Map(object):
 
     def draw(self):
         """Applies transforms and draws the batch."""
-        #warp_slow_x = 0.5
+        # warp_slow_x = 0.5
         #warp_slow_y = 0.5
         #warp_very_slow_x = 0.3
         #warp_very_slow_y = 0.3
 
 
         gl.glPushMatrix()
-        gl.glTranslatef(-int(self.x*warp_very_slow_x), int(self.y*warp_very_slow_x), 0)
-
+        gl.glTranslatef(-int(self.x * warp_very_slow_x), int(self.y * warp_very_slow_x), 0)
         self.batch3.draw()
         gl.glPopMatrix()
-
-
-
         gl.glPushMatrix()
-        gl.glTranslatef(-int(self.x*warp_slow_x), int(self.y*warp_slow_x), 0)
-
-
-
+        gl.glTranslatef(-int(self.x * warp_slow_x), int(self.y * warp_slow_x), 0)
         self.batch2.draw()
         gl.glPopMatrix()
-
-
         gl.glPushMatrix()
-        gl.glTranslatef(-self.x, self.y, 0)
-
-
-
+        gl.glTranslatef(-int(self.x ), int(self.y ), 0)
         self.batch.draw()
         gl.glPopMatrix()
-

@@ -133,6 +133,11 @@ class GooseObject(AnimatedObject):
         AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
 
 
+class Roaming_Monster(AnimatedObject):
+    def __init__(self,x,y,batch,group,usage):
+        AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
+
+
 class BulletObject(AnimatedObject):
 
     def __init__(self, x, y, batch, group, usage, vx, vy):
