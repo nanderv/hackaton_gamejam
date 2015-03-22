@@ -183,6 +183,8 @@ class ObjectGroup(BaseLayer):
     collision_group = []
     teleporter_group = []
     climb_group = []
+    death_group = []
+    collectible_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -278,6 +280,11 @@ class ObjectGroup(BaseLayer):
                         self.teleporter_group.append(obj)
                     if "climb" in obj["properties"].keys():
                         self.climb_group.append(obj)
+                    if "death" in obj["properties"].keys():
+                        self.death_group.append(obj)
+                    if "collectible" in obj["properties"].keys():
+                        self.collectible_group.append(obj)
+
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
@@ -292,6 +299,7 @@ class ObjectGroup(BaseLayer):
         movement = 3
         jumpmovement = 1
         jumpspeed = 12
+        boostspeed = 16
         glide = 0.5
 
         if "sprite" not in object.keys():
@@ -347,7 +355,7 @@ class ObjectGroup(BaseLayer):
         for a in self.collision_group:
             if a is not self:
                 if self.intersect_object(object, a):
-                    print("sdfasf")
+                    vy = int (a["properties"]["collision"])
         for a in self.teleporter_group:
             if teleporttime ==0 and teleporter and a is not self:
                 if self.intersect_object(object, a):
@@ -378,6 +386,14 @@ class ObjectGroup(BaseLayer):
         object["y"] += d_y
         object["vy"] = vy
         object["vx"] = vx
+        for a in self.collectible_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    print("pick up : " + str(a["id"]))
+
+        for a in self.to_tile_coordinates(object["x"], object["y"], object):
+            if self.map.tilelayers["death"][a[0], a[1]] is not 0:
+                    print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
