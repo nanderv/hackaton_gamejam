@@ -179,12 +179,12 @@ class TileLayer(BaseLayer):
                 layer_batch = self.map.batch3
             else:
                 layer_batch = self.map.batch
-            if "minhippieness" in self.data["properties"].keys():
-                self.min_hippieness = self.data["properties"]["minhippieness"]
+            if "min_hippieness" in self.data["properties"].keys():
+                self.min_hippieness = self.data["properties"]["min_hippieness"]
             else:
                 self.min_hippieness = 0
-            if "maxhippieness" in self.data["properties"].keys():
-                self.max_hippieness = self.data["properties"]["maxhippieness"]
+            if "max_hippieness" in self.data["properties"].keys():
+                self.max_hippieness = self.data["properties"]["max_hippieness"]
             else:
                 self.max_hippieness = 1000000000
         else:
