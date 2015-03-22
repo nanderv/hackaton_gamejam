@@ -411,6 +411,8 @@ class ObjectGroup(BaseLayer):
                 if jump:
                     vy = jumpspeed
                     jump = False
+                elif vy < 0:
+                    vy = 0
         if vy > 0:
             if climb:
                 vy = 1
