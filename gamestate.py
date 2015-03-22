@@ -1,4 +1,4 @@
-from hackaton_gamejam.special_effects import FadeLayerIn, FadeLayerOut
+from special_effects import FadeLayerIn, FadeLayerOut
 
 __author__ = 'nander'
 
@@ -7,7 +7,8 @@ class GameState():
     INSTANCE = None
     hippieness = 0
     layer_setup = {}
-
+    UPSCALE = 2
+    window = None
     def __init__(self):
         if self.INSTANCE is not None:
             raise ValueError("An instantiation already exists!")

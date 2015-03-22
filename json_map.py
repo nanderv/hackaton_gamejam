@@ -31,16 +31,24 @@ any path information must be removed from the tileset.
 import math
 import os
 import json
-
+os.sys.path.insert(0, '.')
+ZOOM = 2
 import pyglet
+from pyglet.gl import glMatrixMode, gluOrtho2D, glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, \
+    GL_TEXTURE_MIN_FILTER, GL_NEAREST
+from pyglet.gl import GL_PROJECTION
+from pyglet.gl import glLoadIdentity
 from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
 from player import PlayerAnimatedObject, GooseObject
-
+from gamestate import GameState
 __all__ = ['Map', "TileLayer", "ObjectGroup",]
-
+warp_slow_x = 0.5
+warp_slow_y = 0.5
+warp_very_slow_x = 0.3
+warp_very_slow_y = 0.3
 def get_texture_sequence(filename, tilewidth=32, tileheight=32, margin=1, spacing=1, nearest=False):
     """Returns a texture sequence of a grid generated from a tile set."""
 
@@ -111,8 +119,11 @@ class TileLayer(BaseLayer):
 
         x, y = index
         return self.data["data"][int(x+y*self.map.data["width"])]
-
+    one_time = True
     def set_viewport(self, x, y, w, h):
+        if not self.one_time:
+            return
+        self.one_time = False
         tw = self.map.data["tilewidth"]
         th = self.map.data["tileheight"]
         def yrange(f, t, s):
@@ -132,9 +143,9 @@ class TileLayer(BaseLayer):
         else:
             layer_batch = self.map.batch
 
-        for j in yrange(y, y+h+th, th):
+        for j in yrange(0, self.map.data["height"]*th, th):
             py = j//th
-            for i in yrange(x, x+w+tw, tw):
+            for i in yrange(0, self.map.data["width"]*tw, tw):
                 px = i//tw
                 in_use.append((px, py))
                 if (px, py) not in self.sprites:
@@ -663,18 +674,34 @@ class Map(object):
 
     def draw(self):
         """Applies transforms and draws the batch."""
-        gl.glPushMatrix()
-        gl.glTranslatef(-self.x, self.y, 0)
-        self.batch2.draw()
-        gl.glPopMatrix()
+        #warp_slow_x = 0.5
+        #warp_slow_y = 0.5
+        #warp_very_slow_x = 0.3
+        #warp_very_slow_y = 0.3
+
 
         gl.glPushMatrix()
-        gl.glTranslatef(-self.x, self.y, 0)
+        gl.glTranslatef(-int(self.x*warp_very_slow_x), int(self.y*warp_very_slow_x), 0)
+
         self.batch3.draw()
         gl.glPopMatrix()
 
+
+
+        gl.glPushMatrix()
+        gl.glTranslatef(-int(self.x*warp_slow_x), int(self.y*warp_slow_x), 0)
+
+
+
+        self.batch2.draw()
+        gl.glPopMatrix()
+
+
         gl.glPushMatrix()
         gl.glTranslatef(-self.x, self.y, 0)
+
+
+
         self.batch.draw()
         gl.glPopMatrix()
 

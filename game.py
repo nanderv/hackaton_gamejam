@@ -1,13 +1,10 @@
-from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
-from special_effects import Phase_In, EffectManager
-from player import fancy_move_cam
-from Map_Modules.gamestate import GameState
+from gamestate import GameState
 
 __author__ = 'nander'
 #/usr/bin/env python
 
 import os
-
+SCALE = 2
 import pyglet
 #frametime
 FT = 1/60
@@ -17,11 +14,15 @@ from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
 
-window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
-window.set_vsync(0)
+window = pyglet.window.Window(fullscreen=True)
+wwidth =int(window.width / SCALE)
+hheight =int(window.height / SCALE)
+window.close()
+window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
 gamestate = GameState.get_instance()
 gamestate.window = window
 
+print(gamestate)
 
 
 
@@ -33,6 +34,7 @@ def update(dt):
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
     gamestate.map.draw()
+    print(gamestate.window)
     gamestate.hippieness +=1
     gamestate.be_hippy()
     gamestate.hippieness = max(0, gamestate.hippieness)
@@ -73,8 +75,7 @@ def start_map(map):
 
     gamestate.hide_false_layers()
 
-
     pyglet.clock.schedule_interval(update, FT)
-    pyglet.clock.set_fps_limit(1/FT)
+
     pyglet.app.run()
-start_map("testmap1.json")
+start_map("city2.json")
