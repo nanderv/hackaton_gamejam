@@ -57,7 +57,7 @@ class GameState():
     enabled_death_layers = []
     enabled_climb_layers = []
     current_source = None
-
+    enabled_collectible_layers =[]
 
     def start_game(self):
         game_state = "L"
@@ -73,7 +73,14 @@ class GameState():
         pass
 
     def be_hippy(self):
+            if self.hippieness >= 100:
+                self.all_layers["CitySpecial"].set_opacity(0)
+
             for cs in self.all_layers.values():
+
+
+
+
                 wanted_state  = float(cs.min_hippieness) <= self.hippieness < float(cs.max_hippieness)
                 if wanted_state != cs.curVis:
                     if cs.collision_layer:
@@ -135,7 +142,6 @@ class GameState():
         for layer in self.enabled_death_layers:
             sprite = layer.sprites.get((x,y),None)
             if sprite is not None and sprite.opacity is not None:
-                print(sprite)
                 ret += layer[x, y]
         return ret
 
@@ -144,7 +150,6 @@ class GameState():
         for layer in self.enabled_climb_layers:
             sprite = layer.sprites.get((x,y),None)
             if sprite is not None and sprite.opacity is not None:
-                print(sprite)
                 ret += layer[x, y]
         return ret
 

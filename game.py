@@ -7,7 +7,7 @@ source3 = pyglet.media.load("hell.wav")
 
 __author__ = 'nander'
 #/usr/bin/env python
-REVIVAL = True
+REVIVAL = False
 import os
 SCALE = 2
 import pyglet
@@ -36,7 +36,6 @@ from player import Player
 from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', 'assets/backgrounds', 'assets/sounds',]
-print(pyglet.resource.path)
 FULLSCREEN = False
 
 
@@ -98,7 +97,6 @@ def update(dt):
                 gamestate.game_state = "L"
 
         if gamestate.game_state == "L":
-            print("loaded your game")
             gamestate.game_state = "G"
 
 
@@ -133,8 +131,6 @@ def start_map(map):
     #gamestate.music_player[1].play()
     #gamestate.music_player[2].play()
     #gamestate.music_player[3].play()
-    print(gamestate.current_source.duration)
-    print(gamestate.current_source.duration-2)
  #   pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)

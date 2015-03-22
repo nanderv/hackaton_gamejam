@@ -125,7 +125,6 @@ class AnimatedObject(pyglet.sprite.Sprite):
         raw = pyglet.resource.image(default)
         raw_seq = pyglet.image.ImageGrid(raw, 1, length)
         animation = pyglet.image.Animation.from_image_sequence(raw_seq, 1/30)
-        print(name)
         self.animations[name] = animation
 
     def onTick(self):
@@ -229,17 +228,6 @@ class SkullObject(Roaming_Monster):
         Roaming_Monster.__init__(self, "assets/entity/skull_idle.png",x,y,batch,group,usage, 12,(2*32))
         self.add_animation("n", "assets/entity/skull_idle.png" ,12)
 
-class BulletObject(AnimatedObject):
-
-    def __init__(self, x, y, batch, group, usage, vx, vy):
-        super().__init__(self, "assets/entity/sprite_pink_elephant.png", x, y, batch, group, usage, 10)
-        self.vx = vx
-        self.vy = vy
-
-    def onTick(self):
-        super().onTick()
-        self.x += self.vx
-        self.y += self.vy
 
 def fancy_move_cam(object, map, window):
 

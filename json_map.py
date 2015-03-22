@@ -461,7 +461,6 @@ class ObjectGroup(BaseLayer):
                             sound.play()
         for a in self.enemy_group:
             if self.intersect_object(object, a):
-                print("lol, u died, noob")
                 GameState.get_instance().game_state ="D"
                 sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
                 sound.play()
@@ -499,7 +498,6 @@ class ObjectGroup(BaseLayer):
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
-                print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
                 GameState.get_instance().game_state ="D"
                 sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
                 sound.play()
@@ -615,12 +613,7 @@ class ObjectGroup(BaseLayer):
             if "sprite" in object.keys():
                     object["sprite"].visible = op
 
-        for tel in self.teleporter_group:
-            tel["sprite"].visible = op
 
-        for tel in self.collectible_group:
-            if tel not in self.objects:
-                tel["sprite"].visible = op
 
 
 
