@@ -1,4 +1,6 @@
+
 from gamestate import GameState, merge_two_dicts, reset_game_state
+
 
 __author__ = 'nander'
 #/usr/bin/env python
@@ -50,6 +52,8 @@ def update(dt):
         gamestate.player.handle_input()
         gamestate.effect_manager.run_effects()
         gamestate.be_hippy()
+        #sample_first_joystick()
+
         gamestate.map.draw()
     else:
         if gamestate.game_state == "D":
@@ -120,12 +124,16 @@ def start_map(map):
     gamestate.effect_manager = effect_manager
     player = None
     testlayer = None
+    pyglet.media.load(filename)
+    player.queue(source1)
+    player.play()
+    
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
         for object in  m.objectgroups[key].objects:
             if str.lower(object["name"]) == "player":
-                player = Player(object, m.objectgroups[key], gamestate.keyboardhandler, m, window)
+                player = Player(object, m.objectgroups[key], gamestate.keyboardhandler,  m, window)
     gamestate.player = player
     for key in og_keys:
         for object in m.objectgroups[key].objects:
@@ -141,6 +149,7 @@ def start_game():
     gamestate.window = window
     keyboardhandler = pyglet.window.key.KeyStateHandler()
     window.push_handlers(keyboardhandler)
+
     gamestate.keyboardhandler = keyboardhandler
     start_map("CityForest.json")
     pyglet.clock.schedule_interval_soft(update, FT)

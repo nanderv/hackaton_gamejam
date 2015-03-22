@@ -1,3 +1,7 @@
+from concurrent.futures import thread
+import threading
+import time
+
 __author__ = 'nander'
 import pyglet
 import os
@@ -17,12 +21,13 @@ class Player():
         self.keyboardhandler = keyboardhandler
         self.objectgroup = objectgroup
         self.map = map
+
+
         self.animation_object = object["sprite"]
         self.window = window
         self.sprite = self.object["sprite"]
+
     state_importance = {"jumping_left": 2, "jumping_right": 2, "walking_left": 1, "walking_right":1, "idle":0}
-
-
     def set_animation_state(self):
         if self.prev_animation is not self.playerState:
             self.animation_object.set_animation(self.playerState)
@@ -39,6 +44,7 @@ class Player():
         self.prev_animation = self.playerState
         self.playerState = None
         self.statechanged = False
+
 
         vx = self.object["vx"]
         portal = self.object["portal"]
@@ -70,9 +76,7 @@ class Player():
 
 
         if self.keyboardhandler[pyglet.window.key.SPACE]:
-            if not self.up:
-                print("a_a")
-                self.up = True
+
 
             up = True
             jump = True
@@ -82,8 +86,7 @@ class Player():
                 self.add_animation_state("jumping_left")
             else:
                 self.add_animation_state("jumping_right")
-        else:
-            self.up = False
+
 
         if not self.statechanged:
                     self.playerState = "idle"
@@ -96,6 +99,7 @@ class Player():
         self.object["portal"] = portal
         self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window)
+        self.joystick_input = []
 
 
 
@@ -223,3 +227,4 @@ def fancy_move_cam(object, map, window):
          res_y = objY - win_max_y
 
     map.set_viewport(res_x, res_y, map.w, map.h)
+

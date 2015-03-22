@@ -1,5 +1,6 @@
 import pyglet
 from special_effects import FadeLayerIn, FadeLayerOut, EffectManager, Phase_In
+
 __author__ = 'nander'
 from player import Player
 
@@ -9,7 +10,7 @@ def reset_game_state():
     gamestate.INSTANCE = None
     gamestate.FT = 1/60
     gamestate.current_map = "CityForest.json"
-    gamestate.hippieness = 0
+    gamestate.hippieness = 60
     gamestate.layer_setup = {}
     gamestate.UPSCALE = 2
     gamestate.window = None
@@ -19,6 +20,7 @@ def reset_game_state():
     gamestate.enabled_collision_layers = []
     gamestate.enabled_death_layers = []
     gamestate.enabled_climb_layers = []
+
     return gamestate
 
 class GameState():
@@ -31,6 +33,7 @@ class GameState():
     def get_instance(cls):
         if cls.INSTANCE is None:
             cls.INSTANCE = GameState()
+        player = pyglet.media.Player()
         return cls.INSTANCE
 
     @classmethod
@@ -40,8 +43,10 @@ class GameState():
     game_state = "L"
     INSTANCE = None
     FT = 1/60
+
     current_map = "CityForest.json"
     hippieness = 0
+    music_player = None
     layer_setup = {}
     UPSCALE = 2
     window = None
@@ -88,14 +93,13 @@ class GameState():
                             if cs in self.enabled_death_layers:
                                 self.enabled_climb_layers.remove(cs)
                     if wanted_state:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 16))
                     else:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
+                        GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 16))
                     cs.curVis = wanted_state
 
     def hide_false_layers(self):
             gamestate = GameState.get_instance()
-            print (gamestate.all_layers)
             for cs in gamestate.all_layers.values():
                     if cs.collision_layer:
                         if float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):

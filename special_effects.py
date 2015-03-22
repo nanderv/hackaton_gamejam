@@ -105,6 +105,7 @@ class FadeLayerIn(Effect):
         self.frame += 1
         if self.frame == self.time:
             self.frame = 0
+            self.layer.set_opacity(255)
             return False
         return True
 
@@ -119,6 +120,7 @@ class FadeLayerOut(Effect):
         self.frame += 1
         if self.frame == self.time:
             self.frame = 0
+            self.layer.set_opacity(0)
             return False
         return True
 
