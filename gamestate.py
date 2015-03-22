@@ -88,9 +88,11 @@ class GameState():
                             if cs in self.enabled_death_layers:
                                 self.enabled_climb_layers.remove(cs)
                     if wanted_state:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        cs.set_opacity(255)
+                        #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
                     else:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
+                        cs.set_opacity(0)
+                        #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     cs.curVis = wanted_state
 
     def hide_false_layers(self):

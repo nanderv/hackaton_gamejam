@@ -452,7 +452,7 @@ class ObjectGroup(BaseLayer):
                 if self.intersect_object(object, a):
                     goal = a["properties"]["teleport"]
                     for x in self.teleporter_group:
-                        if int(x['id']) == int(goal):
+                        if str(x['name']) == str(goal):
                             d_x = x["x"] - object["x"]
                             d_y = x["y"] - object["y"]
                             teleporttime = 30
@@ -484,14 +484,20 @@ class ObjectGroup(BaseLayer):
         object["vy"] = vy
         object["vx"] = vx
         for a in self.collectible_group:
+            if a["type"] != "city":
+                a["sprite"].opacity = 0
             if a is not self:
                 if self.intersect_object(object, a):
-                    print("pick up : " + str(a["id"]))
-                    a["sprite"].batch = None
-                    self.collectible_group.remove(a)
                     gamestate = GameState.get_instance()
-                    gamestate.hippieness += 10
-                    print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
+                    h = gamestate.hippieness
+                    if (a["type"] == "city" and h < 100) or \
+                        (a["type"] == "forest" and h >= 100 and h < 200) or \
+                        (a["type"] == "unicorn" and h >= 200 and h < 300) or \
+                        (a["type"] == "hell" and h >= 300):
+                        a["sprite"].batch = None
+                        self.collectible_group.remove(a)
+                        gamestate.hippieness += 10
+                        print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
