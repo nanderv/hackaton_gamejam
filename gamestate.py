@@ -31,14 +31,15 @@ class GameState():
 
     def be_hippy(self):
             for cs in self.all_layers.values():
-                wanted_state  = float(cs.min_hippieness) < self.hippieness < float(cs.max_hippieness)
+                wanted_state  = float(cs.min_hippieness) <= self.hippieness < float(cs.max_hippieness)
                 if wanted_state != cs.curVis:
                     if cs.collision_layer:
                         if wanted_state:
                             self.enabled_collision_layers.append(cs)
                             #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
                         else:
-                            self.enabled_collision_layers.remove(cs)
+                            if cs in self.enabled_collision_layers:
+                                self.enabled_collision_layers.remove(cs)
                             #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     else:
                         if wanted_state:
@@ -57,8 +58,8 @@ class GameState():
                         if float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):
                             self.enabled_collision_layers.append(cs)
                             #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
-                        else:
-                            self.enabled_collision_layers.remove(cs)
+
+
                             #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     else:
                         if  float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):

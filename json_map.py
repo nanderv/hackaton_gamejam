@@ -506,26 +506,25 @@ class ObjectGroup(BaseLayer):
     def collision_detection(self, o_x, o_y, d_x, d_y, object):
         b_check = True
         tile_collide = GameState.get_instance().tile_collide
-        if "collision" in self.map.tilelayers.keys():
-            for a in self.to_tile_coordinates(o_x + d_x, o_y + d_y, object):
+        for a in self.to_tile_coordinates(o_x + d_x, o_y + d_y, object):
+            if tile_collide(a[0], a[1]) is not 0:
+                b_check = False
+        if not b_check:
+            x_check = True
+            for a in self.to_tile_coordinates(o_x + d_x, o_y, object):
                 if tile_collide(a[0], a[1]) is not 0:
-                    b_check = False
-            if not b_check:
-                x_check = True
-                for a in self.to_tile_coordinates(o_x + d_x, o_y, object):
+                    x_check = False
+            if x_check:
+                d_y = 0
+            else:
+                y_check = True
+                for a in self.to_tile_coordinates(o_x, o_y + d_y, object):
                     if tile_collide(a[0], a[1]) is not 0:
-                        x_check = False
-                if x_check:
-                    d_y = 0
+                        y_check = False
+                if y_check:
+                    d_x = 0
                 else:
-                    y_check = True
-                    for a in self.to_tile_coordinates(o_x, o_y + d_y, object):
-                        if tile_collide(a[0], a[1]) is not 0:
-                            y_check = False
-                    if y_check:
-                        d_x = 0
-                    else:
-                        return [0, 0]
+                    return [0, 0]
         return [d_x, d_y]
 
     def to_tile_coordinates(self, o_x, o_y, object):

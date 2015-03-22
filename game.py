@@ -35,7 +35,7 @@ def update(dt):
     gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
-    gamestate.hippieness +=1
+    gamestate.hippieness +=0.2
     gamestate.hippieness = max(0, gamestate.hippieness)
     gamestate.be_hippy()
     gamestate.map.draw()
@@ -80,4 +80,4 @@ def start_map(map):
     pyglet.clock.schedule_interval(update, FT)
 
     pyglet.app.run()
-start_map("City.json")
+start_map("CityForest.json")
