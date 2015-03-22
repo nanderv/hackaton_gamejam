@@ -21,7 +21,7 @@ import sys
 import os
 
 
-FULLSCREEN = False
+FULLSCREEN = True
 if FULLSCREEN:
     window = pyglet.window.Window(fullscreen=True)
     wwidth =int(window.width / SCALE)
