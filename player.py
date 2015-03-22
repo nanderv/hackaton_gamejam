@@ -30,6 +30,7 @@ class Player():
         idle = True
         if (self.keyboardhandler[pyglet.window.key.D] or
                 self.keyboardhandler[pyglet.window.key.RIGHT]):
+<<<<<<< HEAD
                 if self.playerState is not "walk_right":
                     self.animation_object.set_animation("walk_right")
                     self.playerState="walk_right"
@@ -50,6 +51,17 @@ class Player():
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
 
+=======
+            vx += 1
+        if (self.keyboardhandler[pyglet.window.key.A] or
+                self.keyboardhandler[pyglet.window.key.LEFT]):
+            vx -= 1
+        if (self.keyboardhandler[pyglet.window.key.S] or
+                self.keyboardhandler[pyglet.window.key.DOWN]):
+            vy -= 1
+        if (self.keyboardhandler[pyglet.window.key.W] or
+                self.keyboardhandler[pyglet.window.key.UP]):
+>>>>>>> 31cffdfd35ef470fffa84f0e066649430807e554
             vy += 1
             idle = False
             portal = True
