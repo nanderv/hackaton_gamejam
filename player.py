@@ -127,16 +127,49 @@ class PlayerAnimatedObject(AnimatedObject):
         self.add_animation("jumping_left","assets/entity/player/jumping_hflip/jumping_hflip.png" , 10)
 
 
-class GooseObject(AnimatedObject):
-
-    def __init__(self,x,y,batch,group,usage):
-        AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
-
-
 class Roaming_Monster(AnimatedObject):
-    def __init__(self,x,y,batch,group,usage):
-        AnimatedObject.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6)
+    pos = 0
+    max = 64
+    dir = 1
+    baseX = 0
+    def __init__(self,animation, x,y,batch,group,usage, frames, max):
+        self.max = max
+        self.baseX = x
+        AnimatedObject.__init__(self, animation,x,y,batch,group,usage, frames)
+        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
+        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+    def ai(self):
+        self.pos = self.pos + self.dir
+        self.object["x"] += self.dir
+        if self.pos <= 0 or self.pos == self.max:
+            self.dir *= -1
+            self.set_animation(self.dir)
+        self.x = self.baseX + self.pos
 
+class Vertical_Roaming_Monster(AnimatedObject):
+    pos = 0
+    max = 64
+    dir = 1
+    baseY = 0
+    def __init__(self,animation, x,y,batch,group,usage, frames, max):
+        self.max = max
+        self.baseY = y
+        AnimatedObject.__init__(self, animation,x,y,batch,group,usage, frames)
+        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
+        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+    def ai(self):
+        self.pos += self.dir
+        self.object["y"] += self.dir
+        if self.pos <= 0 or self.pos == self.max:
+            self.dir *= -1
+            self.set_animation(self.dir)
+        self.y = self.baseY - self.pos
+
+
+class GooseObject(Roaming_Monster):
+
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6,64)
 
 class BulletObject(AnimatedObject):
 
