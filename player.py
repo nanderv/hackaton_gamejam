@@ -146,6 +146,8 @@ class Roaming_Monster(AnimatedObject):
     max = 64
     dir = 1
     baseX = 0
+    animation1 = None
+    animation2 = None
     def __init__(self,animation, x,y,batch,group,usage, frames, max):
         self.max = max
         self.baseX = x
@@ -160,6 +162,8 @@ class Roaming_Monster(AnimatedObject):
         self.x = self.baseX + self.pos
 
 class Vertical_Roaming_Monster(AnimatedObject):
+    animation1 = None
+    animation2 = None
     pos = 0
     max = 64
     dir = 1
@@ -186,7 +190,6 @@ class GooseObject(Roaming_Monster):
         self.add_animation("b", "assets/entity/sprite_goose_hflip.png" ,6)
 
 class DevilObject(Roaming_Monster):
-
     def __init__(self,x,y,batch,group,usage):
         Roaming_Monster.__init__(self, "assets/entity/sprite_devil.png",x,y,batch,group,usage, 10,(4*32))
         self.add_animation("c", "assets/entity/sprite_devil.png",10)
@@ -212,16 +215,19 @@ class PinkElephantObject(Roaming_Monster):
 
 class SawBladeObject(Vertical_Roaming_Monster):
     def __init__(self,x,y,batch,group,usage):
-        Vertical_Roaming_Monster.__init__(self, "assets/entity/sprite_sawblade.png",x,y,batch,group,usage, 8,(4*32))
+        Roaming_Monster.__init__(self, "assets/entity/sprite_sawblade.png",x,y,batch,group,usage, 8,(4*32))
         self.add_animation("k", "assets/entity/sprite_sawblade.png" ,8)
 
 class TurtleObject(Vertical_Roaming_Monster):
     def __init__(self,x,y,batch,group,usage):
-        Vertical_Roaming_Monster.__init__(self, "assets/entity/sprite_turtle_walking.png",x,y,batch,group,usage, 12,(6*32))
+        Roaming_Monster.__init__(self, "assets/entity/sprite_turtle_walking.png",x,y,batch,group,usage, 12,(6*32))
         self.add_animation("l", "assets/entity/sprite_turtle_walking.png" ,12)
         self.add_animation("m", "assets/entity/sprite_turtle_walking_hflip.png",12)
-        self.dir=2
 
+class SkullObject(Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/skull_idle.png",x,y,batch,group,usage, 12,(2*32))
+        self.add_animation("n", "assets/entity/skull_idle.png" ,12)
 
 class BulletObject(AnimatedObject):
 

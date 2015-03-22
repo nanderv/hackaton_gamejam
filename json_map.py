@@ -43,7 +43,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
-from player import PlayerAnimatedObject, GooseObject, DevilObject, EvilGooseObject, HedgehogObject, PinkElephantObject, SawBladeObject, TurtleObject
+from player import PlayerAnimatedObject, GooseObject, DevilObject, EvilGooseObject, HedgehogObject, PinkElephantObject, SawBladeObject, TurtleObject, SkullObject
 from gamestate import GameState
 __all__ = ['Map', "TileLayer", "ObjectGroup", ]
 warp_slow_x = 0.5
@@ -341,7 +341,7 @@ class ObjectGroup(BaseLayer):
                             obj["enemy"] = False
                         else:
                             object_dict = {"goose": GooseObject, "devil":DevilObject, "evilgoose": EvilGooseObject, "hedgehog":HedgehogObject,
-                                "pink":PinkElephantObject,"saw":SawBladeObject, "turtle":TurtleObject}
+                                "pink":PinkElephantObject,"saw":SawBladeObject, "turtle":TurtleObject, "skull":SkullObject}
                             in_dict = False
                             for object in object_dict.keys():
                                 if object == obj["type"]:
@@ -405,6 +405,8 @@ class ObjectGroup(BaseLayer):
         for a in self.to_tile_coordinates(o_x, o_y + 1, object):
             if GameState.get_instance().tile_collide(a[0], a[1]) is not 0:
                 if jump:
+                    sound = pyglet.resource.media('assets/sounds/jump.wav', streaming=False)
+                    sound.play()
                     vy = jumpspeed
                     jump = False
                 elif vy < 0:
@@ -443,6 +445,8 @@ class ObjectGroup(BaseLayer):
             if a is not self:
                 if self.intersect_object(object, a):
                     vy = int(a["properties"]["collision"])
+                    sound = pyglet.resource.media('assets/sounds/bounce.wav', streaming=False)
+                    sound.play()
         for a in self.teleporter_group:
             if teleporttime == 0 and teleporter and a is not self:
                 if self.intersect_object(object, a):
@@ -453,10 +457,14 @@ class ObjectGroup(BaseLayer):
                             d_y = x["y"] - object["y"]
                             teleporttime = 30
                             object["portal"] = False
+                            sound = pyglet.resource.media('assets/sounds/bounce.wav', streaming=False)
+                            sound.play()
         for a in self.enemy_group:
             if self.intersect_object(object, a):
                 print("lol, u died, noob")
                 GameState.get_instance().game_state ="D"
+                sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
+                sound.play()
 
 
         b_climb = False
@@ -488,10 +496,13 @@ class ObjectGroup(BaseLayer):
                     gamestate.hippieness += 10
                     print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
 
+
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
                 print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
                 GameState.get_instance().game_state ="D"
+                sound = pyglet.resource.media('assets/sounds/hit.wav', streaming=False)
+                sound.play()
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):

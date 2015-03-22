@@ -124,9 +124,18 @@ def start_map(map):
     testlayer = None
 
 
-
-
-
+    gamestate.music_player.queue(source1)
+    gamestate.music_player.queue(source2)
+    gamestate.music_player.queue(source3)
+    gamestate.musiclevel = 1
+    gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
+    gamestate.current_source = source1
+    #gamestate.music_player[1].play()
+    #gamestate.music_player[2].play()
+    #gamestate.music_player[3].play()
+    print(gamestate.current_source.duration)
+    print(gamestate.current_source.duration-2)
+ #   pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
