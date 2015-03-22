@@ -1,24 +1,27 @@
-from pyglet.gl import glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER
-from special_effects import Phase_In, EffectManager
-from player import fancy_move_cam
-from Map_Modules.gamestate import GameState
+from gamestate import GameState, merge_two_dicts
 
 __author__ = 'nander'
 #/usr/bin/env python
 
 import os
-
+SCALE = 2
 import pyglet
 #frametime
-FT = 1/60
+FT = 1/30
 os.sys.path.insert(0, '.')
 from player import Player
 from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
-
-window = pyglet.window.Window(fullscreen=False, width = 800, height = 600)
-window.set_vsync(0)
+FULLSCREEN = False
+if FULLSCREEN:
+    window = pyglet.window.Window(fullscreen=True)
+    wwidth =int(window.width / SCALE)
+    hheight =int(window.height / SCALE)
+    window.close()
+    window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
+else:
+    window = pyglet.window.Window()
 gamestate = GameState.get_instance()
 gamestate.window = window
 
@@ -32,10 +35,13 @@ def update(dt):
     gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
-    gamestate.map.draw()
-    gamestate.hippieness +=1
-    gamestate.be_hippy()
+    gamestate.hippieness +=0.2
     gamestate.hippieness = max(0, gamestate.hippieness)
+    gamestate.be_hippy()
+    gamestate.map.draw()
+
+
+
 
 def start_map(map):
     # load the map
@@ -60,7 +66,7 @@ def start_map(map):
     player = None
     testlayer = None
     tl_keys = m.tilelayers.keys()
-
+    gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
         for object in  m.objectgroups[key].objects:
             if str.lower(object["name"]) == "player":
@@ -70,11 +76,8 @@ def start_map(map):
         for object in m.objectgroups[key].objects:
             a = Phase_In(object, 1/FT)
             effect_manager.add_effect(a)
-
     gamestate.hide_false_layers()
-
-
     pyglet.clock.schedule_interval(update, FT)
-    pyglet.clock.set_fps_limit(1/FT)
+
     pyglet.app.run()
-start_map("city3.json")
+start_map("CityForest.json")
