@@ -347,13 +347,10 @@ class ObjectGroup(BaseLayer):
                     print("sdfasf")
         for a in self.teleporter_group:
             if teleporttime ==0 and teleporter and a is not self:
-                print(" bitch")
                 if self.intersect_object(object, a):
                     goal=a["properties"]["teleport"]
-                    print("goal = " + str(goal))
                     for x in self.teleporter_group:
                         if int(x['id']) == int(goal):
-                            print(x["id"])
                             d_x = x["x"]-object["x"]
                             d_y = x["y"]-object["y"]
                             teleporttime = 30
