@@ -182,6 +182,7 @@ class ObjectGroup(BaseLayer):
     """
     collision_group = []
     teleporter_group = []
+    climb_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -275,6 +276,8 @@ class ObjectGroup(BaseLayer):
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
+                    if "climb" in obj["properties"].keys():
+                        self.climb_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
@@ -282,6 +285,7 @@ class ObjectGroup(BaseLayer):
                     obj["jump"]= False
                     obj["portal"]=False
                     obj["portaltime"]=0
+                    obj["climb"]=False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -299,6 +303,7 @@ class ObjectGroup(BaseLayer):
         d_x = 0
         teleporter= object["portal"]
         teleporttime = object["portaltime"]
+        climb = object["climb"]
         jump = object["jump"]
         o_x = object["x"]
         o_y = object["y"]
@@ -310,11 +315,19 @@ class ObjectGroup(BaseLayer):
                     vy = jumpspeed
                     jump = False
         if vy > 0:
-            vy -= ay
-            d_y = -vy * jumpmovement
+            if climb:
+                vy = 1
+                d_y = -movement
+            else:
+                vy -= ay
+                d_y = -vy * jumpmovement
         if vy <= 0:
-            vy -= ay
-            d_y = -int(vy * jumpmovement*glide)
+            if climb:
+                vy = -1
+                d_y = movement
+            else:
+                vy -= ay
+                d_y = -int(vy * jumpmovement*glide)
         if vx < 0:
             d_x = -movement
         elif vx > 0:
@@ -334,19 +347,22 @@ class ObjectGroup(BaseLayer):
                     print("sdfasf")
         for a in self.teleporter_group:
             if teleporttime ==0 and teleporter and a is not self:
-                print(" bitch")
                 if self.intersect_object(object, a):
                     goal=a["properties"]["teleport"]
-                    print("goal = " + str(goal))
                     for x in self.teleporter_group:
                         if int(x['id']) == int(goal):
-                            print(x["id"])
                             d_x = x["x"]-object["x"]
                             d_y = x["y"]-object["y"]
                             teleporttime = 30
                             object["portal"]=False
-            elif teleporter:
-                object["portal"] = False
+        b_climb = False
+        for a in self.climb_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    b_climb= True
+        object["climb"]=b_climb
+        if teleporter:
+            object["portal"] = False
         if teleporttime > 0:
             teleporttime -= 1
 
