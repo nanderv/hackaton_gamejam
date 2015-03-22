@@ -45,7 +45,6 @@ from pyglet.sprite import Sprite
 from pyglet import gl
 from player import PlayerAnimatedObject, GooseObject
 from gamestate import GameState
-
 __all__ = ['Map', "TileLayer", "ObjectGroup", ]
 warp_slow_x = 0.5
 warp_slow_y = 0.5
@@ -112,6 +111,9 @@ class TileLayer(BaseLayer):
     sprites = None
     opacity = 255
     collision_layer = False
+    death_layer = False
+    climb_layer = False
+
 
     def __iter__(self):
         return iter(self.data)
@@ -150,6 +152,10 @@ class TileLayer(BaseLayer):
         if "properties" in self.data.keys():
             if "collision" in self.data["properties"].keys():
                 self.collision_layer = True
+            if "climb" in self.data["properties"].keys():
+                self.climb_layer = True
+            if "death" in self.data["properties"].keys():
+                self.death_layer = True
             if "slow" in self.data["properties"].keys():
                 layer_batch = self.map.batch2
             elif "veryslow" in self.data["properties"].keys():
@@ -217,8 +223,11 @@ class ObjectGroup(BaseLayer):
 
     """
     collision_layer = False
+    death_layer = False
+    climb_layer = False
     collision_group = []
     teleporter_group = []
+    enemy_group = []
     climb_group = []
     death_group = []
 
@@ -299,13 +308,18 @@ class ObjectGroup(BaseLayer):
                         if str.lower(obj["name"]) == "player":
                             sprite = PlayerAnimatedObject(obj["x"] + tileoffset[0], self.h - obj["y"] + tileoffset[1],
                                                           self.map.batch, self.group, "dynamic", )
+                            obj["enemy"] = False
                         else:
                             object_dict = {"goose": GooseObject}
                             in_dict = False
                             for object in object_dict.keys():
                                 if object == obj["type"]:
-                                    object_dict[object](obj["x"] + tileoffset[0], self.h - obj["y"] + tileoffset[1],
+                                    sprite = object_dict[object](obj["x"] + tileoffset[0], self.h - obj["y"] + tileoffset[1],
                                                         self.map.batch, self.group, "dynamic", )
+                                    GameState.get_instance().ai_list.append(sprite)
+                                    sprite.object = obj
+                                    obj["enemy"] = True
+                                    self.enemy_group.append(obj)
                                     in_dict = True
                             if not in_dict:
                                 sprite = Sprite(texture,
@@ -315,18 +329,18 @@ class ObjectGroup(BaseLayer):
                                                 group=self.group,
                                                 usage="dynamic",
                                 )
-                    print(obj["properties"].keys())
+                                obj["enemy"] = False
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
-                        print("teleporter added")
                     if "climb" in obj["properties"].keys():
                         self.climb_group.append(obj)
                     if "death" in obj["properties"].keys():
                         self.death_group.append(obj)
                     if "collectible" in obj["properties"].keys():
                         self.collectible_group.append(obj)
+
 
                     obj["sprite"] = sprite
                     obj["vx"] = 0
@@ -339,11 +353,11 @@ class ObjectGroup(BaseLayer):
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
-        movement = 6
+        movement = 4
         jumpmovement = 1
         jumpspeed = 12
         boostspeed = 16
-        glide = 0.5
+        glide = 1
 
         if "sprite" not in object.keys():
             return [0, 0]
@@ -359,7 +373,6 @@ class ObjectGroup(BaseLayer):
         o_x = object["x"]
         o_y = object["y"]
         ay = object["ay"]
-
         for a in self.to_tile_coordinates(o_x, o_y + 1, object):
             if GameState.get_instance().tile_collide(a[0], a[1]) is not 0:
                 if jump:
@@ -409,9 +422,15 @@ class ObjectGroup(BaseLayer):
                             d_y = x["y"] - object["y"]
                             teleporttime = 30
                             object["portal"] = False
+        for a in self.enemy_group:
+            if self.intersect_object(object, a):
+                print("lol, u died, noob")
+                GameState.get_state().game_state ="D"
+
+
         b_climb = False
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
-            if self.map.tilelayers["climb"][a[0], a[1]] is not 0:
+            if GameState.get_instance().tile_climb(a[0], a[1]) is not 0:
                 b_climb = True
         if b_climb:
             vy = 0
@@ -435,8 +454,9 @@ class ObjectGroup(BaseLayer):
                     print("pick up : " + str(a["id"]))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
-            if self.map.tilelayers["death"][a[0], a[1]] is not 0:
+            if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
                 print("lol dood n00b l2p, 3sp00ky5me ayy lmao u ded m8")
+                GameState.get_instance().game_state ="D"
         return [d_x, d_y]
 
     def dydx_checker(self, o_x, o_y, d_x, d_y, object):
