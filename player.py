@@ -57,11 +57,13 @@ class Player():
             self.add_animation_state("walk_left")
         if (self.keyboardhandler[pyglet.window.key.S] or
                 self.keyboardhandler[pyglet.window.key.DOWN]):
-            vy -= 1
+            if self.object["climb"]:
+                vy = -1
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]):
-            vy += 1
             idle = False
+            if self.object["climb"]:
+                vy =1
             portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
@@ -81,7 +83,6 @@ class Player():
         self.object["vy"] = vy
         self.object["vx"] = vx
         self.object["portal"] = portal
-        print(self.playerState)
         self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window)
 

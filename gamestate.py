@@ -24,32 +24,31 @@ class GameState():
         pass
 
     def be_hippy(self):
-        for layernr in self.layer_setup.keys():
-            all_layers = merge_two_dicts(self.map.tilelayers, self.map.objectgroups)
-            if layernr in all_layers.keys():
-                cs = self.layer_setup[layernr]
-                wanted_state = wanted_state = cs[0] < self.hippieness < cs[1]
-
-                if wanted_state != cs[2]:
-                    layer = all_layers.get(layernr, None)
-                    if wanted_state:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerIn(layer, 120))
-                    else:
-                        GameState.get_instance().effect_manager.add_effect(FadeLayerOut(layer, 120))
-                    self.layer_setup[layernr][2] = wanted_state
+        all_layers = merge_two_dicts(self.map.tilelayers, self.map.objectgroups)
+        for layernr in all_layers.keys():
+            cs = all_layers[layernr]
+            wanted_state  = float(cs.min_hippieness) < self.hippieness < float(cs.max_hippieness)
+            if wanted_state != cs.curVis:
+                if wanted_state:
+                    print("fadein")
+                    GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 120))
+                else:
+                    print("fadeout")
+                    GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 120))
+                cs.curVis = wanted_state
 
     def hide_false_layers(self):
-        for layernr in self.layer_setup.keys():
             all_layers = merge_two_dicts(self.map.tilelayers, self.map.objectgroups)
-            if layernr in all_layers.keys():
-                cs = self.layer_setup[layernr]
-                print(self.layer_setup)
+
+            for layernr in all_layers.keys():
+                cs = all_layers[layernr]
                 layer = all_layers.get(layernr, None)
-                if cs[2]:
+                if  float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):
                     layer.set_opacity(255)
+                    cs.curVis = True
                 else:
-                    print("no opacity")
                     layer.set_opacity(0)
+                    cs.curVis = False
 
 
 

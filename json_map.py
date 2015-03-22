@@ -79,9 +79,10 @@ class BaseLayer(object):
     """
     # ordered group
     groups = 0
-
+    min_hippieness = 0
+    max_hippieness = 1000000000
+    curVis = False
     def __init__(self, data, map):
-
         self.data = data
         self.map = map
 
@@ -89,6 +90,7 @@ class BaseLayer(object):
             self.sprites = {}
             self.group = OrderedGroup(BaseLayer.groups)
             BaseLayer.groups += 1
+        self.curVis = self.data["visible"]
 
 
 class TileLayer(BaseLayer):
@@ -102,6 +104,7 @@ class TileLayer(BaseLayer):
         - Get one tile of layer.
 
     """
+    sprites = None
     opacity = 255
     def __iter__(self):
         return iter(self.data)
@@ -126,20 +129,34 @@ class TileLayer(BaseLayer):
         self.one_time = False
         tw = self.map.data["tilewidth"]
         th = self.map.data["tileheight"]
+
         def yrange(f, t, s):
             while f < t:
                 yield f
                 f += s
 
         in_use = []
+        self.min_hippieness = 0
+        self.max_hippieness = 10000000000
+        print(self.data.keys())
         if "properties" in self.data.keys():
-
+            print(self.data["properties"].keys())
             if  "slow" in self.data["properties"].keys():
                 layer_batch = self.map.batch2
             elif "veryslow" in self.data["properties"].keys():
                 layer_batch = self.map.batch3
             else:
                 layer_batch = self.map.batch
+            if "minhippieness" in self.data["properties"].keys():
+                self.min_hippieness = self.data["properties"]["minhippieness"]
+                print(self.data["properties"]["minhippieness"])
+            else:
+                self.min_hippieness = 0
+                print("auto")
+            if "maxhippieness" in self.data["properties"].keys():
+                self.max_hippieness = self.data["properties"]["maxhippieness"]
+            else:
+                self.max_hippieness = 1000000000
         else:
             layer_batch = self.map.batch
 
@@ -167,6 +184,8 @@ class TileLayer(BaseLayer):
     old_group = None
     def set_opacity(self, opacity):
         self.opacity = opacity
+        if self.sprites is None:
+            return
         for spr in self.sprites.keys():
             sprite = self.sprites[spr]
             if sprite is not None:
@@ -193,6 +212,7 @@ class ObjectGroup(BaseLayer):
     """
     collision_group = []
     teleporter_group = []
+    climb_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -286,6 +306,8 @@ class ObjectGroup(BaseLayer):
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
                         self.teleporter_group.append(obj)
+                    if "climb" in obj["properties"].keys():
+                        self.climb_group.append(obj)
                     obj["sprite"] = sprite
                     obj["vx"]=0
                     obj["vy"]=0
@@ -293,6 +315,7 @@ class ObjectGroup(BaseLayer):
                     obj["jump"]= False
                     obj["portal"]=False
                     obj["portaltime"]=0
+                    obj["climb"]=False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -310,6 +333,7 @@ class ObjectGroup(BaseLayer):
         d_x = 0
         teleporter= object["portal"]
         teleporttime = object["portaltime"]
+        climb = object["climb"]
         jump = object["jump"]
         o_x = object["x"]
         o_y = object["y"]
@@ -321,11 +345,19 @@ class ObjectGroup(BaseLayer):
                     vy = jumpspeed
                     jump = False
         if vy > 0:
-            vy -= ay
-            d_y = -vy * jumpmovement
+            if climb:
+                vy = 1
+                d_y = -movement
+            else:
+                vy -= ay
+                d_y = -vy * jumpmovement
         if vy <= 0:
-            vy -= ay
-            d_y = -int(vy * jumpmovement*glide)
+            if climb:
+                vy = -1
+                d_y = movement
+            else:
+                vy -= ay
+                d_y = -int(vy * jumpmovement*glide)
         if vx < 0:
             d_x = -movement
         elif vx > 0:
@@ -345,19 +377,22 @@ class ObjectGroup(BaseLayer):
                     print("sdfasf")
         for a in self.teleporter_group:
             if teleporttime ==0 and teleporter and a is not self:
-                print(" bitch")
                 if self.intersect_object(object, a):
                     goal=a["properties"]["teleport"]
-                    print("goal = " + str(goal))
                     for x in self.teleporter_group:
                         if int(x['id']) == int(goal):
-                            print(x["id"])
                             d_x = x["x"]-object["x"]
                             d_y = x["y"]-object["y"]
                             teleporttime = 30
                             object["portal"]=False
-            elif teleporter:
-                object["portal"] = False
+        b_climb = False
+        for a in self.climb_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    b_climb= True
+        object["climb"]=b_climb
+        if teleporter:
+            object["portal"] = False
         if teleporttime > 0:
             teleporttime -= 1
 

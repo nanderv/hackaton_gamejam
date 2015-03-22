@@ -13,12 +13,15 @@ from player import Player
 from json_map import Map
 from special_effects import *
 pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', '/assets/entity/player/jumping']
-
-window = pyglet.window.Window(fullscreen=True)
-wwidth =int(window.width / SCALE)
-hheight =int(window.height / SCALE)
-window.close()
-window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
+FULLSCREEN = False
+if FULLSCREEN:
+    window = pyglet.window.Window(fullscreen=True)
+    wwidth =int(window.width / SCALE)
+    hheight =int(window.height / SCALE)
+    window.close()
+    window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
+else:
+    window = pyglet.window.Window()
 gamestate = GameState.get_instance()
 gamestate.window = window
 
@@ -35,6 +38,7 @@ def update(dt):
     gamestate.map.draw()
     gamestate.hippieness +=1
     gamestate.be_hippy()
+
     gamestate.hippieness = max(0, gamestate.hippieness)
 
 def start_map(map):
@@ -70,10 +74,8 @@ def start_map(map):
         for object in m.objectgroups[key].objects:
             a = Phase_In(object, 1/FT)
             effect_manager.add_effect(a)
-
     gamestate.hide_false_layers()
-
     pyglet.clock.schedule_interval(update, FT)
 
     pyglet.app.run()
-start_map("city2.json")
+start_map("city_nander_test.json")
