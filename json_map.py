@@ -36,7 +36,7 @@ os.sys.path.insert(0, '.')
 ZOOM = 2
 import pyglet
 from pyglet.gl import glMatrixMode, gluOrtho2D, glScalef, glTexParameteri, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, \
-    GL_TEXTURE_MIN_FILTER, GL_NEAREST
+    GL_TEXTURE_MIN_FILTER, GL_NEAREST, glFlush
 from pyglet.gl import GL_PROJECTION
 from pyglet.gl import glLoadIdentity
 from pyglet.graphics import OrderedGroup
@@ -825,3 +825,4 @@ class Map(object):
         gl.glTranslatef(-int(self.x ), int(self.y ), 0)
         self.batch.draw()
         gl.glPopMatrix()
+        glFlush()

@@ -27,9 +27,11 @@ if FULLSCREEN:
     hheight =int(window.height / SCALE)
     window.close()
     window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
+    window.double_buffer=False
 else:
-    window = pyglet.window.Window()
-
+    window = pyglet.window.Window(style=pyglet.window.Window.WINDOW_STYLE_DIALOG)
+    window.double_buffer=False
+window.set_vsync(True)
 
 
 from player import Player
@@ -65,7 +67,7 @@ def update(dt):
         if gamestate.game_state =="DD":
             keyboardhandler = gamestate.keyboardhandler
             window = gamestate.window
-
+            window.push_handlers
 
             for layer in gamestate.map.objectgroups.values():
                 layer.delete_sprites()
@@ -87,7 +89,8 @@ def update(dt):
             gamestate = reset_game_state()
             gamestate.window = window
 
-            start_map("CityForest.json")
+            start_map("CityForest2.json")
+
             gamestate.game_state = "L"
 
         if gamestate.game_state == "L":
