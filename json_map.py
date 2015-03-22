@@ -108,11 +108,28 @@ class TileLayer(BaseLayer):
         - Get one tile of layer.
 
     """
+    def delete_sprites(self):
+        for key in self.sprites.keys():
+            self.sprites[key].delete()
+            del self.sprites[key]
     sprites = None
     opacity = 255
     collision_layer = False
     death_layer = False
     climb_layer = False
+    def delete_sprites(self):
+        deleted = []
+        if self.sprites is None:
+            return
+        for key in self.sprites.keys():
+            if self.sprites[key] is not None:
+                self.sprites[key].delete()
+                deleted.append(key)
+        for key in deleted:
+            self.sprites[key]
+        self.collision_layer = None
+        self.death_layer = None
+        self.climb_layer = None
 
 
     def __iter__(self):
@@ -222,6 +239,22 @@ class ObjectGroup(BaseLayer):
     `ObjectGroup.get_by_type(type)`.
 
     """
+    def delete_sprites(self):
+        deleted = []
+        if self.sprites is None:
+            return
+        for key in self.sprites.keys():
+            if self.sprites[key] is not None:
+                self.sprites[key].delete()
+                deleted.append(key)
+        for key in deleted:
+            self.sprites[key]
+        self.death_layer = None
+        self.climb_layer = None
+        self.enemy_group = None
+        self.climb_group = None
+        self.death_group = None
+        self.collision_group = None
     collision_layer = False
     death_layer = False
     climb_layer = False
