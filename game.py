@@ -68,6 +68,7 @@ def update(dt):
         gamestate.effect_manager.run_effects()
         gamestate.be_hippy()
 
+        gamestate.run_ai()
         gamestate.map.draw()
     else:
         if gamestate.game_state == "D":

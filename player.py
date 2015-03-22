@@ -22,7 +22,6 @@ class Player():
         self.objectgroup = objectgroup
         self.map = map
 
-
         self.animation_object = object["sprite"]
         self.window = window
         self.sprite = self.object["sprite"]
@@ -126,7 +125,7 @@ class AnimatedObject(pyglet.sprite.Sprite):
         raw = pyglet.resource.image(default)
         raw_seq = pyglet.image.ImageGrid(raw, 1, length)
         animation = pyglet.image.Animation.from_image_sequence(raw_seq, 1/30)
-
+        print(name)
         self.animations[name] = animation
 
     def onTick(self):
@@ -169,8 +168,6 @@ class Vertical_Roaming_Monster(AnimatedObject):
         self.max = max
         self.baseY = y
         AnimatedObject.__init__(self, animation,x,y,batch,group,usage, frames)
-        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
-        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
     def ai(self):
         self.pos += self.dir
         self.object["y"] += self.dir
@@ -183,9 +180,48 @@ class Vertical_Roaming_Monster(AnimatedObject):
 class GooseObject(Roaming_Monster):
 
     def __init__(self,x,y,batch,group,usage):
-        Roaming_Monster.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6,64)
-        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
-        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+
+        Roaming_Monster.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6,(2*32))
+        self.add_animation("a", "assets/entity/sprite_goose.png" ,6)
+        self.add_animation("b", "assets/entity/sprite_goose_hflip.png" ,6)
+
+class DevilObject(Roaming_Monster):
+
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_devil.png",x,y,batch,group,usage, 10,(4*32))
+        self.add_animation("c", "assets/entity/sprite_devil.png",10)
+        self.add_animation("d", "assets/entity/sprite_devil_hflip.png",10)
+
+class EvilGooseObject(Vertical_Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_evil_goose.png",x,y,batch,group,usage, 6,(2*32))
+        self.add_animation("e", "assets/entity/sprite_evil_goose.png" ,6)
+        self.add_animation("f", "assets/entity/sprite_evil_goose_hflip.png" ,6)
+
+class HedgehogObject(Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/hedgehog.png",x,y,batch,group,usage, 4,(2*32))
+        self.add_animation("g", "assets/entity/hedgehog.png" ,4)
+        self.add_animation("h", "assets/entity/hedgehog_hflip.png" ,4)
+
+class PinkElephantObject(Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_pink_elephant.png",x,y,batch,group,usage, 10,(3*32))
+        self.add_animation("i", "assets/entity/sprite_pink_elephant.png" ,10)
+        self.add_animation("j", "assets/entity/sprite_pink_elephant_hflip.png" ,10)
+
+class SawBladeObject(Vertical_Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Vertical_Roaming_Monster.__init__(self, "assets/entity/sprite_sawblade.png",x,y,batch,group,usage, 8,(4*32))
+        self.add_animation("k", "assets/entity/sprite_sawblade.png" ,8)
+
+class TurtleObject(Vertical_Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Vertical_Roaming_Monster.__init__(self, "assets/entity/sprite_turtle_walking.png",x,y,batch,group,usage, 12,(6*32))
+        self.add_animation("l", "assets/entity/sprite_turtle_walking.png" ,12)
+        self.add_animation("m", "assets/entity/sprite_turtle_walking_hflip.png",12)
+        self.dir=2
+
 
 class BulletObject(AnimatedObject):
 
