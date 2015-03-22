@@ -147,7 +147,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -220,6 +220,22 @@
                  "width":8,
                  "x":292,
                  "y":289
+                }, 
+                {
+                 "gid":247,
+                 "height":0,
+                 "id":30,
+                 "name":"evil goose",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"evilgoose",
+                 "visible":true,
+                 "width":0,
+                 "x":811,
+                 "y":243
                 }],
          "opacity":1,
          "properties":
@@ -242,7 +258,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -270,7 +286,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -286,7 +302,7 @@
              "min_hippieness":"60"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -462,7 +478,7 @@
              "max_hippienes":"100"
             },
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -477,7 +493,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
@@ -493,12 +509,12 @@
              "min_hippieness":"80"
             },
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":200,
          "x":0,
          "y":0
         }],
- "nextobjectid":30,
+ "nextobjectid":31,
  "orientation":"orthogonal",
  "properties":
     {

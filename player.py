@@ -17,6 +17,7 @@ class Player():
         self.keyboardhandler = keyboardhandler
         self.objectgroup = objectgroup
         self.map = map
+        print(object)
         self.animation_object = object["sprite"]
         self.window = window
         self.sprite = self.object["sprite"]
@@ -147,8 +148,7 @@ class Roaming_Monster(AnimatedObject):
         self.max = max
         self.baseX = x
         AnimatedObject.__init__(self, animation,x,y,batch,group,usage, frames)
-        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
-        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+
     def ai(self):
         self.pos = self.pos + self.dir
         self.object["x"] += self.dir
@@ -179,8 +179,8 @@ class GooseObject(Roaming_Monster):
 
     def __init__(self,x,y,batch,group,usage):
         Roaming_Monster.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6,64)
-        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
-        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+        self.add_animation(1, "assets/entity/sprite_goose.png" ,6)
+        self.add_animation(-1, "assets/entity/sprite_goose_hflip.png" ,6)
 
 class DevilObject(Roaming_Monster):
 
@@ -188,6 +188,12 @@ class DevilObject(Roaming_Monster):
         Roaming_Monster.__init__(self, "assets/entity/sprite_devil.png",x,y,batch,group,usage, 10,128)
         self.add_animation(1, "assets/entity/sprite_devil.png",10)
         self.add_animation(-1, "assets/entity/sprite_devil_hflip.png",10)
+
+class EvilGooseObject(Roaming_Monster):
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_evil_goose.png",x,y,batch,group,usage, 6,96)
+        self.add_animation(1, "assets/entity/sprite_evil_goose.png" ,6)
+        self.add_animation(-1, "assets/entity/sprite_evil_goose_hflip.png" ,6)
 
 class BulletObject(AnimatedObject):
 
