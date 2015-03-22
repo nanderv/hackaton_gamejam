@@ -263,7 +263,6 @@ class ObjectGroup(BaseLayer):
     enemy_group = []
     climb_group = []
     death_group = []
-
     collectible_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
@@ -328,8 +327,6 @@ class ObjectGroup(BaseLayer):
 
         in_use = []
         for obj in self.objects:
-                if not obj["visible"]:
-                    continue
                 if "gid" in obj:
                     in_use.append((obj["x"], obj["y"]))
                     try:
@@ -364,6 +361,14 @@ class ObjectGroup(BaseLayer):
                                                 usage="dynamic",
                                 )
                                 obj["enemy"] = False
+                    obj["sprite"] = sprite
+                    obj["vx"] = 0
+                    obj["vy"] = 0
+                    obj["ay"] = 1
+                    obj["jump"] = False
+                    obj["portal"] = False
+                    obj["portaltime"] = 0
+                    obj["climb"] = False
                     if "collision" in obj["properties"].keys():
                         self.collision_group.append(obj)
                     if "teleport" in obj["properties"].keys():
@@ -374,14 +379,6 @@ class ObjectGroup(BaseLayer):
                         self.death_group.append(obj)
                     if "collectible" in obj["properties"].keys():
                         self.collectible_group.append(obj)
-                    obj["sprite"] = sprite
-                    obj["vx"] = 0
-                    obj["vy"] = 0
-                    obj["ay"] = 1
-                    obj["jump"] = False
-                    obj["portal"] = False
-                    obj["portaltime"] = 0
-                    obj["climb"] = False
                     self.sprites[(obj["x"], obj["y"])] = sprite
 
     def move(self, object):
@@ -483,20 +480,13 @@ class ObjectGroup(BaseLayer):
         object["vy"] = vy
         object["vx"] = vx
         for a in self.collectible_group:
-            if a["type"] != "city":
-                a["sprite"].opacity = 0
-            if a is not self:
-                if self.intersect_object(object, a):
+            if self.intersect_object(object, a):
                     gamestate = GameState.get_instance()
                     h = gamestate.hippieness
-                    if (a["type"] == "city" and h < 100) or \
-                        (a["type"] == "forest" and h >= 100 and h < 200) or \
-                        (a["type"] == "unicorn" and h >= 200 and h < 300) or \
-                        (a["type"] == "hell" and h >= 300):
-                        a["sprite"].batch = None
-                        self.collectible_group.remove(a)
-                        gamestate.hippieness += 10
-                        print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
+                    a["sprite"].batch = None
+                    self.collectible_group.remove(a)
+                    gamestate.hippieness += 10
+                    print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
@@ -609,9 +599,19 @@ class ObjectGroup(BaseLayer):
         return ret
 
     def set_opacity(self, opacity):
+        op = opacity > 128
         for object in self.objects:
             if "sprite" in object.keys():
-                object["sprite"].opacity = opacity
+                    object["sprite"].visible = op
+
+        for tel in self.teleporter_group:
+            tel["sprite"].visible = op
+
+        for tel in self.collectible_group:
+            if tel not in self.objects:
+                tel["sprite"].visible = op
+
+
 
 
 class Tileset(object):

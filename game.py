@@ -40,22 +40,6 @@ print(pyglet.resource.path)
 FULLSCREEN = False
 
 
-def queue_song(aa=0):
-    print ("queueing phase")
-    gamestate = GameState.get_instance()
-    if gamestate.hippieness > 150*gamestate.musiclevel:
-        print("plusplus")
-        gamestate.music_player.eos_action = gamestate.music_player.EOS_NEXT
-        gamestate.music_player.next()
-        gamestate.musiclevel += 1
-        gamestate.hippieness += 150
-
-        gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
-    else:
-        print("loop")
-        gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
-
-    pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration)
 
 
 @window.event
@@ -131,7 +115,7 @@ def start_map(map):
 
     # set the viewport to the window dimensions
     m.set_viewport(0, 0, window.width, window.height)
-    gamestate.hippieness = 31-0
+    gamestate.hippieness = 0
 
     og_keys = m.objectgroups.keys()
     effect_manager = EffectManager()
@@ -139,18 +123,10 @@ def start_map(map):
     player = None
     testlayer = None
 
-    gamestate.music_player.queue(source1)
-    gamestate.music_player.queue(source2)
-    gamestate.music_player.queue(source3)
-    gamestate.musiclevel = 1
-    gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
-    gamestate.current_source = source1
-    gamestate.music_player[1].play()
-    gamestate.music_player[2].play()
-    gamestate.music_player[3].play()
-    print(gamestate.current_source.duration)
-    print(gamestate.current_source.duration-2)
-    pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
+
+
+
+
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
