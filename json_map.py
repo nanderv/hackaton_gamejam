@@ -111,6 +111,7 @@ class TileLayer(BaseLayer):
     """
     sprites = None
     opacity = 255
+    collision_layer = False
 
     def __iter__(self):
         return iter(self.data)
@@ -149,6 +150,8 @@ class TileLayer(BaseLayer):
         print(self.data.keys())
         if "properties" in self.data.keys():
             print(self.data["properties"].keys())
+            if "collision" in self.data["properties"].keys():
+                self.collision_layer = True
             if "slow" in self.data["properties"].keys():
                 layer_batch = self.map.batch2
             elif "veryslow" in self.data["properties"].keys():
@@ -217,6 +220,7 @@ class ObjectGroup(BaseLayer):
     `ObjectGroup.get_by_type(type)`.
 
     """
+    collision_layer = False
     collision_group = []
     teleporter_group = []
     climb_group = []
@@ -356,7 +360,7 @@ class ObjectGroup(BaseLayer):
         ay = object["ay"]
 
         for a in self.to_tile_coordinates(o_x, o_y + 1, object):
-            if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+            if GameState.get_instance().tile_collide(a[0], a[1]) is not 0:
                 if jump:
                     vy = jumpspeed
                     jump = False
@@ -493,21 +497,22 @@ class ObjectGroup(BaseLayer):
 
     def collision_detection(self, o_x, o_y, d_x, d_y, object):
         b_check = True
+        tile_collide = GameState.get_instance().tile_collide
         if "collision" in self.map.tilelayers.keys():
             for a in self.to_tile_coordinates(o_x + d_x, o_y + d_y, object):
-                if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                if tile_collide(a[0], a[1]) is not 0:
                     b_check = False
             if not b_check:
                 x_check = True
                 for a in self.to_tile_coordinates(o_x + d_x, o_y, object):
-                    if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                    if tile_collide(a[0], a[1]) is not 0:
                         x_check = False
                 if x_check:
                     d_y = 0
                 else:
                     y_check = True
                     for a in self.to_tile_coordinates(o_x, o_y + d_y, object):
-                        if self.map.tilelayers["collision"][a[0], a[1]] is not 0:
+                        if tile_collide(a[0], a[1]) is not 0:
                             y_check = False
                     if y_check:
                         d_x = 0

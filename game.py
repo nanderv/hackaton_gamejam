@@ -80,4 +80,4 @@ def start_map(map):
     pyglet.clock.schedule_interval(update, FT)
 
     pyglet.app.run()
-start_map("city_nander_test.json")
+start_map("city3.json")

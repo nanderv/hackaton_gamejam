@@ -10,7 +10,7 @@ class GameState():
     UPSCALE = 2
     window = None
     all_layers={}
-
+    enabled_collision_layers = []
 
     def __init__(self):
         if self.INSTANCE is not None:
@@ -33,27 +33,46 @@ class GameState():
             for cs in self.all_layers.values():
                 wanted_state  = float(cs.min_hippieness) < self.hippieness < float(cs.max_hippieness)
                 if wanted_state != cs.curVis:
-                    if wanted_state:
-                        print("fadein")
-                        cs.set_opacity(255)
-                        #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                    if cs.collision_layer:
+                        if wanted_state:
+                            self.enabled_collision_layers.append(cs)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        else:
+                            self.enabled_collision_layers.remove(cs)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     else:
-                        cs.set_opacity(0)
-                        print("fadeout")
-                        #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
+                        if wanted_state:
+                            cs.set_opacity(255)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        else:
+                            cs.set_opacity(0)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
                     cs.curVis = wanted_state
 
     def hide_false_layers(self):
             gamestate = GameState.get_instance()
 
             for cs in gamestate.all_layers.values():
+                    if cs.collision_layer:
+                        if float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):
+                            self.enabled_collision_layers.append(cs)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerIn(cs, 255))
+                        else:
+                            self.enabled_collision_layers.remove(cs)
+                            #GameState.get_instance().effect_manager.add_effect(FadeLayerOut(cs, 255))
+                    else:
+                        if  float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):
+                            cs.set_opacity(255)
+                            cs.curVis = True
+                        else:
+                            cs.set_opacity(0)
+                            cs.curVis = False
+    def tile_collide(self,x,y):
+        ret = 0
+        for layer in self.enabled_collision_layers:
+            ret += layer[x, y]
 
-                if  float(cs.min_hippieness) <= self.hippieness <= float(cs.max_hippieness):
-                    cs.set_opacity(255)
-                    cs.curVis = True
-                else:
-                    cs.set_opacity(0)
-                    cs.curVis = False
+        return ret
 
 
 
