@@ -226,6 +226,7 @@ class ObjectGroup(BaseLayer):
     climb_group = []
     death_group = []
 
+    collectible_group = []
     def __init__(self, data, map):
         super(ObjectGroup, self).__init__(data, map)
 
@@ -327,6 +328,9 @@ class ObjectGroup(BaseLayer):
                         self.climb_group.append(obj)
                     if "death" in obj["properties"].keys():
                         self.death_group.append(obj)
+                    if "collectible" in obj["properties"].keys():
+                        self.collectible_group.append(obj)
+
                     obj["sprite"] = sprite
                     obj["vx"] = 0
                     obj["vy"] = 0
@@ -428,6 +432,10 @@ class ObjectGroup(BaseLayer):
         object["y"] += d_y
         object["vy"] = vy
         object["vx"] = vx
+        for a in self.collectible_group:
+            if a is not self:
+                if self.intersect_object(object, a):
+                    print("pick up : " + str(a["id"]))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if self.map.tilelayers["death"][a[0], a[1]] is not 0:
