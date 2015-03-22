@@ -256,13 +256,29 @@
          "name":"Special Layer",
          "objects":[
                 {
+                 "gid":44,
+                 "height":8,
+                 "id":5,
+                 "name":"Teleporter 1",
+                 "properties":
+                    {
+                     "teleport":"6"
+                    },
+                 "rotation":-134.871,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":60.4078333333333,
+                 "y":519.884833333333
+                }, 
+                {
                  "gid":12,
                  "height":0,
                  "id":6,
                  "name":"Teleporter 2",
                  "properties":
                     {
-                     "teleport":"10"
+                     "teleport":"5"
                     },
                  "rotation":-224.304,
                  "type":"",
@@ -302,22 +318,6 @@
                  "width":16,
                  "x":846.258833333333,
                  "y":622.781833333333
-                }, 
-                {
-                 "gid":12,
-                 "height":0,
-                 "id":10,
-                 "name":"Teleporter 3",
-                 "properties":
-                    {
-                     "teleport":"6"
-                    },
-                 "rotation":-224.304,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":66,
-                 "y":512
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -344,8 +344,8 @@
                  "type":"",
                  "visible":true,
                  "width":14,
-                 "x":63,
-                 "y":160
+                 "x":18,
+                 "y":479
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -387,7 +387,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":11,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "properties":
     {
