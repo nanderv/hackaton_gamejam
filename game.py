@@ -35,6 +35,7 @@ def update(dt):
     gamestate.effect_manager = EffectManager()
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
+    gamestate.hippieness +=0.2
     gamestate.hippieness = max(0, gamestate.hippieness)
     gamestate.be_hippy()
     gamestate.map.draw()
