@@ -34,7 +34,7 @@ class Player():
             self.playerState = state
         self.statechanged = True
 
-
+    up = False
     def handle_input(self):
         self.prev_animation = self.playerState
         self.playerState = None
@@ -51,6 +51,8 @@ class Player():
                 self.add_animation_state("walk_right")
                 vx += 1
 
+
+
         if (self.keyboardhandler[pyglet.window.key.A] or
                 self.keyboardhandler[pyglet.window.key.LEFT]):
             vx -= 1
@@ -65,14 +67,23 @@ class Player():
             if self.object["climb"]:
                 vy =1
             portal = True
+
+
         if self.keyboardhandler[pyglet.window.key.SPACE]:
+            if not self.up:
+                print("a_a")
+                self.up = True
+
+            up = True
             jump = True
+
             idle = False
             if self.playerState == "walk_left":
                 self.add_animation_state("jumping_left")
             else:
                 self.add_animation_state("jumping_right")
-
+        else:
+            self.up = False
 
         if not self.statechanged:
                     self.playerState = "idle"
