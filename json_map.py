@@ -351,7 +351,7 @@ class ObjectGroup(BaseLayer):
         for a in self.collision_group:
             if a is not self:
                 if self.intersect_object(object, a):
-                    vy = boostspeed
+                    vy = int (a["properties"]["collision"])
         for a in self.teleporter_group:
             if teleporttime ==0 and teleporter and a is not self:
                 if self.intersect_object(object, a):
