@@ -147,7 +147,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -258,7 +258,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -302,7 +302,7 @@
              "min_hippieness":"60"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -478,7 +478,7 @@
              "max_hippienes":"100"
             },
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -493,7 +493,7 @@
              "max_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -509,7 +509,7 @@
              "min_hippieness":"80"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
