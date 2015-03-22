@@ -22,7 +22,6 @@ window = pyglet.window.Window(fullscreen=True,width = wwidth, height = hheight)
 gamestate = GameState.get_instance()
 gamestate.window = window
 
-print(gamestate)
 
 
 
@@ -34,7 +33,6 @@ def update(dt):
     gamestate.player.handle_input()
     gamestate.effect_manager.run_effects()
     gamestate.map.draw()
-    print(gamestate.window)
     gamestate.hippieness +=1
     gamestate.be_hippy()
     gamestate.hippieness = max(0, gamestate.hippieness)

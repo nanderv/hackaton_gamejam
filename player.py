@@ -10,7 +10,7 @@ class Player():
     window = None
     playerState = None
     animation_object = None
-
+    statechanged = False
     def __init__(self, object, objectgroup, keyboardhandler, map, window):
             # walking_anim
         self.object = object
@@ -20,8 +20,26 @@ class Player():
         self.animation_object = object["sprite"]
         self.window = window
         self.sprite = self.object["sprite"]
+    state_importance = {"jumping_left": 2, "jumping_right": 2, "walking_left": 1, "walking_right":1, "idle":0}
+
+
+    def set_animation_state(self):
+        if self.prev_animation is not self.playerState:
+            self.animation_object.set_animation(self.playerState)
+
+    def add_animation_state(self,state):
+        if self.playerState is None:
+            self.playerState = state
+        elif self.state_importance.get(state,-1) > self.state_importance.get(self.playerState,-1):
+            self.playerState = state
+        self.statechanged = True
+
 
     def handle_input(self):
+        self.prev_animation = self.playerState
+        self.playerState = None
+        self.statechanged = False
+
         vx = self.object["vx"]
         portal = self.object["portal"]
         vy = self.object["vy"]
@@ -30,61 +48,43 @@ class Player():
         idle = True
         if (self.keyboardhandler[pyglet.window.key.D] or
                 self.keyboardhandler[pyglet.window.key.RIGHT]):
-<<<<<<< HEAD
-                if self.playerState is not "walk_right":
-                    self.animation_object.set_animation("walk_right")
-                    self.playerState="walk_right"
-                idle = False
+                self.add_animation_state("walk_right")
                 vx += 1
-        if (self.keyboardhandler[pyglet.window.key.A] or
-                self.keyboardhandler[pyglet.window.key.LEFT]):
-                if self.playerState is not "walk_left":
-                    self.animation_object.set_animation("walk_left")
-                    self.playerState="walk_left"
-                idle= False
-                vx -= 1
-        if (self.keyboardhandler[pyglet.window.key.S] or
-                self.keyboardhandler[pyglet.window.key.DOWN]) and self.object["ay"] == 0:
-                vy -= 1
-                idle = False
 
-        if (self.keyboardhandler[pyglet.window.key.W] or
-                self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
-
-=======
-            vx += 1
         if (self.keyboardhandler[pyglet.window.key.A] or
                 self.keyboardhandler[pyglet.window.key.LEFT]):
             vx -= 1
+            self.add_animation_state("walk_left")
         if (self.keyboardhandler[pyglet.window.key.S] or
                 self.keyboardhandler[pyglet.window.key.DOWN]):
             vy -= 1
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]):
->>>>>>> 31cffdfd35ef470fffa84f0e066649430807e554
             vy += 1
             idle = False
             portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
             idle = False
-            if self.playerState is not "jumping":
-                    self.animation_object.set_animation("jumping")
-                    self.playerState="jumping"
+            if self.playerState == "walk_left":
+                self.add_animation_state("jumping_left")
+            else:
+                self.add_animation_state("jumping_right")
 
-        if idle:
-                if self.playerState is not "idle":
-                    self.animation_object.set_animation("idle")
-                    self.playerState="idle"
+
+        if not self.statechanged:
+                    self.playerState = "idle"
+
+        self.set_animation_state()
 
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
         self.object["portal"] = portal
-
-
+        print(self.playerState)
         self.objectgroup.move(self.object)
         fancy_move_cam(self.object, self.map, self.window)
+
 
 
 class AnimatedObject(pyglet.sprite.Sprite):
@@ -121,7 +121,10 @@ class PlayerAnimatedObject(AnimatedObject):
     def __init__(self,x,y,batch,group,usage):
         AnimatedObject.__init__(self, "assets/entity/player/standing/standing.png",x,y,batch,group,usage, 10)
         self.add_animation("walk_right","assets/entity/player/walking/walking.png" , 10)
-        self.add_animation("jumping","assets/entity/player/jumping/jumping.png" , 10)
+        self.add_animation("walk_left","assets/entity/player/walking_hflip/walking_hflip.png" , 10)
+        self.add_animation("jumping_right","assets/entity/player/jumping/jumping.png" , 10)
+        self.add_animation("jumping_left","assets/entity/player/jumping_hflip/jumping_hflip.png" , 10)
+
 
 class GooseObject(AnimatedObject):
 
