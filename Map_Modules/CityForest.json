@@ -586,7 +586,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -603,7 +603,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -620,7 +620,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -637,7 +637,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -652,7 +652,7 @@
              "collision":"0"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -667,7 +667,7 @@
              "death":"0"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -699,7 +699,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -710,7 +710,7 @@
          "name":"Unicorn Skyline",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -791,7 +791,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -807,7 +807,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -823,7 +823,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -839,7 +839,7 @@
              "min_hippieness":"80"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -856,7 +856,7 @@
              "min_hippieness":"100"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -872,7 +872,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -888,7 +888,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -904,7 +904,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -920,7 +920,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -931,7 +931,7 @@
          "name":"Unicorn Rainbow",
          "opacity":0.349999994039536,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -942,7 +942,7 @@
          "name":"Unicorn Background",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -953,7 +953,7 @@
          "name":"Unicorn Background Details",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -964,7 +964,7 @@
          "name":"Unicorn Player Layer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1024,7 +1024,7 @@
              "min_hippieness":"90"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1040,7 +1040,7 @@
              "min_hippieness":"150"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1056,7 +1056,7 @@
              "min_hippieness":"200"
             },
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1067,7 +1067,7 @@
          "name":"Unicorn Foreground",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1078,7 +1078,7 @@
          "name":"climb",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1089,7 +1089,7 @@
          "name":"death",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":200,
          "x":0,
          "y":0
@@ -1261,7 +1261,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0

@@ -241,8 +241,8 @@ class ObjectGroup(BaseLayer):
     """
     def delete_sprites(self):
         deleted = []
-        #if self.sprites is None:
-        return
+        if self.sprites is None:
+            return
         for key in self.sprites.keys():
             if self.sprites[key] is not None:
                 self.sprites[key].delete()
@@ -485,6 +485,11 @@ class ObjectGroup(BaseLayer):
             if a is not self:
                 if self.intersect_object(object, a):
                     print("pick up : " + str(a["id"]))
+                    a["sprite"].batch = None
+                    self.collectible_group.remove(a)
+                    gamestate = GameState.get_instance()
+                    gamestate.hippieness += 10
+                    print("Collected a pill! You\'ve gained some hippieness! Current: " + str(gamestate.hippieness))
 
         for a in self.to_tile_coordinates(object["x"], object["y"], object):
             if GameState.get_instance().tile_death(a[0], a[1]) is not 0:
