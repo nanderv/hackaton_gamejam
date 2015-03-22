@@ -191,7 +191,7 @@ class DevilObject(Roaming_Monster):
 
 class EvilGooseObject(Roaming_Monster):
     def __init__(self,x,y,batch,group,usage):
-        Roaming_Monster.__init__(self, "assets/entity/sprite_evil_goose.png",x,y,batch,group,usage, 6,96)
+        Roaming_Monster.__init__(self, "assets/entity/sprite_evil_goose.png",x,y,batch,group,usage, 6,64)
         self.add_animation(1, "assets/entity/sprite_evil_goose.png" ,6)
         self.add_animation(-1, "assets/entity/sprite_evil_goose_hflip.png" ,6)
 
