@@ -33,10 +33,12 @@ class Player():
             vx -= 1
         if (self.keyboardhandler[pyglet.window.key.S] or
                 self.keyboardhandler[pyglet.window.key.DOWN]):
-            vy -= 1
+            if self.object["climb"]:
+                vy = -1
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]):
-            vy += 1
+            if self.object["climb"]:
+                vy =1
             portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
