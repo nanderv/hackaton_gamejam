@@ -265,7 +265,7 @@ class ObjectGroup(BaseLayer):
                         sprite = None
                     else:
                         if str.lower(obj["name"]) == "player":
-                            sprite = GooseObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
+                            sprite = PlayerAnimatedObject(obj["x"]+tileoffset[0], self.h-obj["y"]+tileoffset[1], self.map.batch,self.group,"dynamic",)
                         else:
                             object_dict = {"goose": GooseObject}
                             in_dict = False

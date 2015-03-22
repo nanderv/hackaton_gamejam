@@ -84,7 +84,7 @@
          "objects":[
                 {
                  "gid":1220,
-                 "height":0,
+                 "height":24,
                  "id":6,
                  "name":"player",
                  "properties":
@@ -94,7 +94,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
+                 "width":14,
                  "x":68,
                  "y":181
                 }],
