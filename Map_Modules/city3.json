@@ -193,7 +193,7 @@
                  "name":"Ladder 1",
                  "properties":
                     {
-
+                     "climb":"0"
                     },
                  "rotation":0,
                  "type":"",
@@ -209,7 +209,7 @@
                  "name":"Ladder 2",
                  "properties":
                     {
-
+                     "climb":"0"
                     },
                  "rotation":0,
                  "type":"",
