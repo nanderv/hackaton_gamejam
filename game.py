@@ -1,5 +1,6 @@
 
 from gamestate import GameState, merge_two_dicts, reset_game_state
+import pyglet
 
 
 __author__ = 'nander'
@@ -36,7 +37,8 @@ else:
 from player import Player
 from json_map import Map
 from special_effects import *
-pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', 'assets/backgrounds']
+pyglet.resource.path = ['assets/tiles','assets/tiles', 'assets/tiles/fence', '', 'Map_Modules', '/assets/entity/player/walking', '/assets/entity/player/standing', 'assets/backgrounds', 'assets/sounds',]
+print(pyglet.resource.path)
 FULLSCREEN = False
 
 
@@ -124,10 +126,11 @@ def start_map(map):
     gamestate.effect_manager = effect_manager
     player = None
     testlayer = None
-    pyglet.media.load(filename)
-    player.queue(source1)
-    player.play()
-    
+    filename = "city.wav"
+    source1 = pyglet.media.load(filename)
+    gamestate.music_player.queue(source1)
+    gamestate.music_player.play()
+    gamestate.music_player.eos_action = EOS_LOOP
     tl_keys = m.tilelayers.keys()
     gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
     for key in og_keys:
