@@ -77,4 +77,4 @@ def start_map(map):
     pyglet.clock.schedule_interval(update, FT)
     pyglet.clock.set_fps_limit(1/FT)
     pyglet.app.run()
-start_map("testmap1.json")
+start_map("city2.json")
