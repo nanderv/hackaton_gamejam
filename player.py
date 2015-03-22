@@ -23,20 +23,20 @@ class Player():
 
     def handle_input(self):
         vx = self.object["vx"]
-
+        portal = self.object["portal"]
         vy = self.object["vy"]
 
         jump = False
         idle = True
         if (self.keyboardhandler[pyglet.window.key.D] or
-                self.keyboardhandler[pyglet.window.key.RIGHT]) and self.object["ax"] == 0:
+                self.keyboardhandler[pyglet.window.key.RIGHT]):
                 if self.playerState is not "walk_right":
                     self.animation_object.set_animation("walk_right")
                     self.playerState="walk_right"
                 idle = False
                 vx += 1
         if (self.keyboardhandler[pyglet.window.key.A] or
-                self.keyboardhandler[pyglet.window.key.LEFT]) and self.object["ax"] == 0:
+                self.keyboardhandler[pyglet.window.key.LEFT]):
                 if self.playerState is not "walk_left":
                     self.animation_object.set_animation("walk_left")
                     self.playerState="walk_left"
@@ -44,16 +44,21 @@ class Player():
                 vx -= 1
         if (self.keyboardhandler[pyglet.window.key.S] or
                 self.keyboardhandler[pyglet.window.key.DOWN]) and self.object["ay"] == 0:
-            vy -= 1
-            idle = False
+                vy -= 1
+                idle = False
 
         if (self.keyboardhandler[pyglet.window.key.W] or
                 self.keyboardhandler[pyglet.window.key.UP]) and self.object["ay"] == 0:
+
             vy += 1
             idle = False
+            portal = True
         if self.keyboardhandler[pyglet.window.key.SPACE]:
             jump = True
             idle = False
+            if self.playerState is not "jumping":
+                    self.animation_object.set_animation("jumping")
+                    self.playerState="jumping"
 
         if idle:
                 if self.playerState is not "idle":
@@ -63,6 +68,7 @@ class Player():
         self.object["jump"] = jump
         self.object["vy"] = vy
         self.object["vx"] = vx
+        self.object["portal"] = portal
 
 
         self.objectgroup.move(self.object)
