@@ -71,7 +71,6 @@ def start_music():
 
 
 def catch_eos():
-    print("meuk!!!")
     gamestate = GameState.get_instance()
     global music_number
     # gamestate.music_player.pop_handlers()
@@ -93,121 +92,62 @@ def catch_eos():
 @window.event
 def update(dt):
 
-    << << << < HEAD
-gamestate = GameState.get_instance()
-if gamestate.game_state == "G":
-    gamestate.window.clear()
-    gamestate.effect_manager = EffectManager()
-    gamestate.player.handle_input()
-    gamestate.effect_manager.run_effects()
-    gamestate.be_hippy()
 
-    gamestate.run_ai()
-    gamestate.map.draw()
-else:
-    if gamestate.game_state == "D":
-        print("You are DEAD")
-        gamestate.game_state = "DDD"
-    if gamestate.game_state == "DDD":
-        if gamestate.keyboardhandler[pyglet.window.key.SPACE]:
-            if REVIVAL:
-                gamestate.game_state = "G"
-            else:
-                gamestate.game_state = "DD"
+    gamestate = GameState.get_instance()
+    if gamestate.game_state == "G":
+        gamestate.window.clear()
+        gamestate.effect_manager = EffectManager()
+        gamestate.player.handle_input()
+        gamestate.effect_manager.run_effects()
+        gamestate.be_hippy()
 
-    if gamestate.game_state == "DD":
-        keyboardhandler = gamestate.keyboardhandler
-        window = gamestate.window
-        window.push_handlers()
+        gamestate.run_ai()
+        gamestate.map.draw()
+    else:
+        if gamestate.game_state == "D":
+            print("You are DEAD")
+            gamestate.game_state = "DDD"
+        if gamestate.game_state == "DDD":
+            if gamestate.keyboardhandler[pyglet.window.key.SPACE]:
+                if REVIVAL:
+                    gamestate.game_state = "G"
+                else:
+                    gamestate.game_state = "DD"
 
-        for layer in gamestate.map.objectgroups.values():
-            layer.delete_sprites()
-        for layer in gamestate.map.tilelayers.values():
-            layer.delete_sprites()
+        if gamestate.game_state == "DD":
+            keyboardhandler = gamestate.keyboardhandler
+            window = gamestate.window
+            window.push_handlers()
 
-        del gamestate.map.batch
-        del gamestate.map.batch2
-        del gamestate.map.batch3
+            for layer in gamestate.map.objectgroups.values():
+                layer.delete_sprites()
+            for layer in gamestate.map.tilelayers.values():
+                layer.delete_sprites()
 
-        del gamestate.player
-        del gamestate.map.data
-        del gamestate.map.tilesets
-        del gamestate.map.objectgroups
-        del gamestate.map
+            del gamestate.map.batch
+            del gamestate.map.batch2
+            del gamestate.map.batch3
 
-        del gamestate
+            del gamestate.player
+            del gamestate.map.data
+            del gamestate.map.tilesets
+            del gamestate.map.objectgroups
+            del gamestate.map
 
-        gamestate = reset_game_state()
-        gamestate.window = window
+            del gamestate
 
-        start_map("CityForest2.json")
+            gamestate = reset_game_state()
+            gamestate.window = window
 
-        if keyboardhandler[pyglet.window.key.SPACE]:
-            start_map("CityForest.json")
-            gamestate.game_state = "L"
+            start_map("CityForest2.json")
 
-    if gamestate.game_state == "L":
-        gamestate.game_state = "G"
+            if keyboardhandler[pyglet.window.key.SPACE]:
+                start_map("CityForest.json")
+                gamestate.game_state = "L"
 
-
-== == == =
-gamestate = GameState.get_instance()
-if gamestate.game_state == "G":
-    gamestate.window.clear()
-    gamestate.effect_manager = EffectManager()
-    gamestate.player.handle_input()
-    gamestate.effect_manager.run_effects()
-    gamestate.be_hippy()
-
-    gamestate.run_ai()
-    gamestate.map.draw()
-else:
-    if gamestate.game_state == "D":
-        print("You are DEAD")
-        gamestate.game_state = "DDD"
-    if gamestate.game_state == "DDD":
-        if gamestate.keyboardhandler[pyglet.window.key.SPACE]:
-            if REVIVAL:
-                gamestate.game_state = "G"
-            else:
-                gamestate.game_state = "DD"
-
-    if gamestate.game_state == "DD":
-        keyboardhandler = gamestate.keyboardhandler
-        window = gamestate.window
-        window.push_handlers()
-
-        for layer in gamestate.map.objectgroups.values():
-            layer.delete_sprites()
-        for layer in gamestate.map.tilelayers.values():
-            layer.delete_sprites()
-
-        del gamestate.map.batch
-        del gamestate.map.batch2
-        del gamestate.map.batch3
-
-        del gamestate.player
-        del gamestate.map.data
-        del gamestate.map.tilesets
-        del gamestate.map.objectgroups
-        del gamestate.map
-
-        del gamestate
-
-        gamestate = reset_game_state()
-        gamestate.window = window
-
-        start_map("CityForest2.json")
-
-        if keyboardhandler[pyglet.window.key.SPACE]:
-            start_map("CityForest.json")
-            gamestate.game_state = "L"
-
-    if gamestate.game_state == "L":
-        print("loaded your game")
-        gamestate.game_state = "G"
->> >> >> > 60
-bf5078a15fdd0d5dfea7eeaf77dd7e87fe29da
+        if gamestate.game_state == "L":
+            print("loaded your game")
+            gamestate.game_state = "G"
 
 
 def start_map(map):
@@ -241,40 +181,37 @@ def start_map(map):
     gamestate.hide_false_layers
 
 
-og_keys = m.objectgroups.keys()
-effect_manager = EffectManager()
-gamestate.effect_manager = effect_manager
-player = None
-testlayer = None
+    og_keys = m.objectgroups.keys()
+    effect_manager = EffectManager()
+    gamestate.effect_manager = effect_manager
+    player = None
+    testlayer = None
 
 
-<< << << < HEAD
-gamestate.music_player.queue(source1)
-gamestate.music_player.queue(source2)
-gamestate.music_player.queue(source3)
-gamestate.musiclevel = 1
-gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
-gamestate.current_source = source1
-#gamestate.music_player[1].play()
-#gamestate.music_player[2].play()
-#gamestate.music_player[3].play()
-#   pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
-tl_keys = m.tilelayers.keys()
-gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
-for key in og_keys:
-    for object in m.objectgroups[key].objects:
-        if str.lower(object["name"]) == "player":
-            player = Player(object, m.objectgroups[key], gamestate.keyboardhandler, m, window)
-gamestate.player = player
-for key in og_keys:
-    for object in m.objectgroups[key].objects:
-        a = Phase_In(object, 1 / FT)
-        effect_manager.add_effect(a)
-gamestate.hide_false_layers()
+    gamestate.music_player.queue(source1)
+    gamestate.music_player.queue(source2)
+    gamestate.music_player.queue(source3)
+    gamestate.musiclevel = 1
+    gamestate.music_player.eos_action = gamestate.music_player.EOS_LOOP
+    gamestate.current_source = source1
+    #gamestate.music_player[1].play()
+    #gamestate.music_player[2].play()
+    #gamestate.music_player[3].play()
+    #   pyglet.clock.schedule_once(queue_song, gamestate.current_source.duration-2)
+    tl_keys = m.tilelayers.keys()
+    gamestate.all_layers = merge_two_dicts(gamestate.map.tilelayers, gamestate.map.objectgroups)
+    for key in og_keys:
+        for object in m.objectgroups[key].objects:
+            if str.lower(object["name"]) == "player":
+                player = Player(object, m.objectgroups[key], gamestate.keyboardhandler, m, window)
+    gamestate.player = player
+    for key in og_keys:
+        for object in m.objectgroups[key].objects:
+            a = Phase_In(object, 1 / FT)
+            effect_manager.add_effect(a)
+    gamestate.hide_false_layers()
 
-== == == =
->> >> >> > 60
-bf5078a15fdd0d5dfea7eeaf77dd7e87fe29da
+
 
 
 def start_game():
