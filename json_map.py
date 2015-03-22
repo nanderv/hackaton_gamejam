@@ -43,7 +43,7 @@ from pyglet.graphics import OrderedGroup
 from pyglet.sprite import Sprite
 
 from pyglet import gl
-from player import PlayerAnimatedObject, GooseObject
+from player import PlayerAnimatedObject, GooseObject, DevilObject
 from gamestate import GameState
 __all__ = ['Map', "TileLayer", "ObjectGroup", ]
 warp_slow_x = 0.5
@@ -343,7 +343,7 @@ class ObjectGroup(BaseLayer):
                                                           self.map.batch, self.group, "dynamic", )
                             obj["enemy"] = False
                         else:
-                            object_dict = {"goose": GooseObject}
+                            object_dict = {"goose": GooseObject, "devil":DevilObject}
                             in_dict = False
                             for object in object_dict.keys():
                                 if object == obj["type"]:
@@ -460,7 +460,7 @@ class ObjectGroup(BaseLayer):
         for a in self.enemy_group:
             if self.intersect_object(object, a):
                 print("lol, u died, noob")
-                GameState.get_state().game_state ="D"
+                GameState.get_instance().game_state ="D"
 
 
         b_climb = False

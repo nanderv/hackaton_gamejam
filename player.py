@@ -166,8 +166,6 @@ class Vertical_Roaming_Monster(AnimatedObject):
         self.max = max
         self.baseY = y
         AnimatedObject.__init__(self, animation,x,y,batch,group,usage, frames)
-        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
-        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
     def ai(self):
         self.pos += self.dir
         self.object["y"] += self.dir
@@ -181,6 +179,15 @@ class GooseObject(Roaming_Monster):
 
     def __init__(self,x,y,batch,group,usage):
         Roaming_Monster.__init__(self, "assets/entity/sprite_goose.png",x,y,batch,group,usage, 6,64)
+        self.add_animation(-1, "assets/entity/sprite_goose.png" ,6)
+        self.add_animation(1, "assets/entity/sprite_goose_hflip.png" ,6)
+
+class DevilObject(Roaming_Monster):
+
+    def __init__(self,x,y,batch,group,usage):
+        Roaming_Monster.__init__(self, "assets/entity/sprite_devil.png",x,y,batch,group,usage, 10,128)
+        self.add_animation(1, "assets/entity/sprite_devil.png",10)
+        self.add_animation(-1, "assets/entity/sprite_devil_hflip.png",10)
 
 class BulletObject(AnimatedObject):
 
