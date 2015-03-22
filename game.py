@@ -50,8 +50,6 @@ def update(dt):
         gamestate.effect_manager = EffectManager()
         gamestate.player.handle_input()
         gamestate.effect_manager.run_effects()
-        gamestate.hippieness +=0.2
-        gamestate.hippieness = max(0, gamestate.hippieness)
         gamestate.be_hippy()
         gamestate.map.draw()
     else:
@@ -87,8 +85,11 @@ def update(dt):
             gamestate = reset_game_state()
             gamestate.window = window
 
-            start_map("CityForest.json")
-            gamestate.game_state = "L"
+            print('done')
+
+            if keyboardhandler[pyglet.window.key.SPACE]:
+                start_map("CityForest.json")
+                gamestate.game_state = "L"
 
         if gamestate.game_state == "L":
             print("loaded your game")
