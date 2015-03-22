@@ -499,7 +499,9 @@
          "opacity":0,
          "properties":
             {
-             "collision":"1"
+             "collision":"1",
+             "max_hippieness":"100",
+             "min_hippieness":"0"
             },
          "type":"tilelayer",
          "visible":true,
@@ -514,7 +516,9 @@
          "opacity":1,
          "properties":
             {
-             "death":"1"
+             "death":"1",
+             "max_hippieness":"100",
+             "min_hippieness":"0"
             },
          "type":"tilelayer",
          "visible":true,
@@ -529,7 +533,9 @@
          "opacity":1,
          "properties":
             {
-             "collision":"1"
+             "collision":"1",
+             "max_hippieness":"200",
+             "min_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":false,
@@ -544,7 +550,9 @@
          "opacity":0,
          "properties":
             {
-             "death":"1"
+             "death":"1",
+             "max_hippieness":"200",
+             "min_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":false,
@@ -559,7 +567,9 @@
          "opacity":1,
          "properties":
             {
-             "collision":"1"
+             "collision":"1",
+             "max_hippieness":"300",
+             "min_hippieness":"200"
             },
          "type":"tilelayer",
          "visible":false,
@@ -574,7 +584,9 @@
          "opacity":1,
          "properties":
             {
-             "death":"1"
+             "death":"1",
+             "max_hippieness":"300",
+             "min_hippieness":"200"
             },
          "type":"tilelayer",
          "visible":false,
@@ -587,6 +599,11 @@
          "height":80,
          "name":"Skyline",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -598,6 +615,11 @@
          "height":80,
          "name":"Hell Skyline",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -609,6 +631,11 @@
          "height":80,
          "name":"City Background",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"100",
+             "min_hippieness":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -620,6 +647,11 @@
          "height":80,
          "name":"City Background Details",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"100",
+             "min_hippieness":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -631,6 +663,11 @@
          "height":80,
          "name":"City Player Layer",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"100",
+             "min_hippieness":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -644,7 +681,9 @@
          "opacity":1,
          "properties":
             {
-             "climb":"1"
+             "climb":"1",
+             "max_hippieness":"100",
+             "min_hippieness":"0"
             },
          "type":"tilelayer",
          "visible":true,
@@ -657,6 +696,11 @@
          "height":80,
          "name":"Forest Background",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"100"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -668,6 +712,11 @@
          "height":80,
          "name":"Forest Background Details",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"100"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -679,6 +728,11 @@
          "height":80,
          "name":"Forest Player Layer",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"100"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -690,6 +744,11 @@
          "height":80,
          "name":"Forest Foreground 2",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"80"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -703,7 +762,9 @@
          "opacity":0,
          "properties":
             {
-             "climb":"1"
+             "climb":"1",
+             "max_hippieness":"200",
+             "min_hippieness":"100"
             },
          "type":"tilelayer",
          "visible":false,
@@ -716,6 +777,11 @@
          "height":80,
          "name":"Hell Background",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -727,6 +793,11 @@
          "height":80,
          "name":"Hell Background Details",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -738,6 +809,11 @@
          "height":80,
          "name":"Hell Expansion",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -749,6 +825,11 @@
          "height":80,
          "name":"Hell Player Layer",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -788,6 +869,11 @@
          "height":80,
          "name":"City Foreground",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"110",
+             "min_hippieness":"0"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":200,
@@ -799,6 +885,11 @@
          "height":80,
          "name":"Forest Foreground",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"90"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -810,6 +901,11 @@
          "height":80,
          "name":"High Forest",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"200",
+             "min_hippieness":"150"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -821,6 +917,11 @@
          "height":80,
          "name":"Hell Foreground",
          "opacity":1,
+         "properties":
+            {
+             "max_hippieness":"300",
+             "min_hippieness":"200"
+            },
          "type":"tilelayer",
          "visible":false,
          "width":200,
@@ -848,8 +949,180 @@
          "width":200,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":80,
+         "name":"City Collectables",
+         "objects":[
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":50,
+                 "name":"collectable1",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":206.666666666667,
+                 "y":192.666666666667
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":51,
+                 "name":"collectable2",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":2.66666666666667,
+                 "y":624
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":52,
+                 "name":"collectable3",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1032.66666666667,
+                 "y":56
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":53,
+                 "name":"collectable4",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1570.66666666667,
+                 "y":462.666666666667
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":54,
+                 "name":"collectable5",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1122,
+                 "y":529.333333333333
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":55,
+                 "name":"collectable6",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":516,
+                 "y":368.666666666667
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":56,
+                 "name":"collectable7",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":145.333333333333,
+                 "y":448.666666666667
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":57,
+                 "name":"collectable8",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":655.333333333333,
+                 "y":529.333333333333
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":58,
+                 "name":"collectable9",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1156,
+                 "y":449.333333333333
+                }, 
+                {
+                 "gid":3969,
+                 "height":16,
+                 "id":59,
+                 "name":"collectable10",
+                 "properties":
+                    {
+                     "collectible":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":2.66666666666667,
+                 "y":524.666666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":200,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":49,
+ "nextobjectid":60,
  "orientation":"orthogonal",
  "properties":
     {
@@ -902,6 +1175,21 @@
          "spacing":0,
          "tileheight":8,
          "tilewidth":8
+        }, 
+        {
+         "firstgid":3969,
+         "image":"..\/assets\/tiles\/collectible_tiles.png",
+         "imageheight":16,
+         "imagewidth":16,
+         "margin":0,
+         "name":"collectible_tiles",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":8,
  "version":1,
