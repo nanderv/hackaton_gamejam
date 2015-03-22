@@ -452,7 +452,7 @@ class ObjectGroup(BaseLayer):
                 if self.intersect_object(object, a):
                     goal = a["properties"]["teleport"]
                     for x in self.teleporter_group:
-                        if int(x['name']) == int(goal):
+                        if str(x['name']) == str(goal):
                             d_x = x["x"] - object["x"]
                             d_y = x["y"] - object["y"]
                             teleporttime = 30
