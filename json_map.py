@@ -241,8 +241,8 @@ class ObjectGroup(BaseLayer):
     """
     def delete_sprites(self):
         deleted = []
-        if self.sprites is None:
-            return
+        #if self.sprites is None:
+        return
         for key in self.sprites.keys():
             if self.sprites[key] is not None:
                 self.sprites[key].delete()
